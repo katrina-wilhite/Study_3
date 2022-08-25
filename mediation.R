@@ -30,7 +30,19 @@ df_males %>%
 mediator_list=as.list(mediator_variables)
 
 matrix(unlist(mediator_list), ncol = 13, byrow = FALSE) -> mediator_matrix
-colnames(mediator_matrix) <- c("active_transport", "naps", "education", "leisure_SB", "passive_transport", "screen_time", "self_care", "social", "sports", "unst_LPA", "unst_MVPA", "household", "sleep")
+colnames(mediator_matrix) <- c("1_active_transport", "2_naps", "3_education", "4_leisure_SB", "5_passive_transport", "6_screen_time", "7_self_care", "8_social", "9_sports", "10_unst_LPA", "11_unst_MVPA", "12_household", "13_sleep")
+df_mediators <- as.data.frame(mediator_matrix)
+#Scale and center mediators
+scale(df_mediators, scale = FALSE) -> df_mediators
+#Center mediators
+
+
+interactions_2 <- t(apply(df_mediators, 1, combn, 2, prod))
+colnames(df_mediators) <- paste(combn(1:13, 2, paste, collapse="V"), sep = "_")
+
+mediator_interactions_2 <- lapply(1:(ncol(combn(1:ncol(df_mediators), m = 2))),
+                                function(y) df_mediators[, combn(1:ncol(df_mediators), m = 2)[,y]])
+str(mediator_interactions_2)
 
 #Ensure structure of "mediator_matrix" is the same as "med' in the regmed vignette 
 ##Run first part of regmed vignette to get data 
@@ -94,6 +106,7 @@ str(transposed_outcome_matrix2)
 
 #Combine new exposure, mediator, and outcome variables into a list 
 male_lasso_data <- list(transposed_exposure_matrix2, mediator_matrix, transposed_outcome_matrix2)
+str(male_lasso_data)
 
 male_lasso_2 <- list(exposure_SEP_only, mediator_matrix, outcome_SDQ_only)
 str(male_lasso_2)
@@ -107,7 +120,7 @@ str(dat.filter)
 str(male_lasso_data)
 #Yay! 
 names(male_lasso_data) <- c("exposure", "mediator", "outcome")
-str(male_lasso_data)
+str(male_lasso_data$mediator)
 x <- male_lasso_data$exposure
 y <- male_lasso_data$outcome
 med <- male_lasso_data$mediator
