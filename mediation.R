@@ -4,7 +4,7 @@ library(dplyr)
 library(haven)
 
 #Load relevant data 
-load(file = "C:/Users/katri/Documents/ACU/Study_2/Study_2/Study_2/df_males_domsp_weekday.RData")
+load(file = "Z:/LSAC dataset/Study_2/Study_2/df_males_domsp_weekday.RData")
 
 lsac_wave6 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb10.sas7bdat")
 
@@ -35,10 +35,51 @@ df_mediators <- as.data.frame(mediator_matrix)
 #Scale and center mediators
 scale(df_mediators, scale = FALSE) -> df_mediators
 #Center mediators
-
+str(df_mediators)
 
 interactions_2 <- t(apply(df_mediators, 1, combn, 2, prod))
-colnames(df_mediators) <- paste(combn(1:13, 2, paste, collapse="V"), sep = "_")
+colnames(interactions_2) <- paste(combn(1:13, 2, paste, collapse="V"), sep = "_")
+interactions_3 <- t(apply(df_mediators, 1, combn, 3, prod))
+colnames(interactions_3) <- paste(combn(1:13, 3, paste, collapse="V"), sep = "_")
+interactions_4 <- t(apply(df_mediators, 1, combn, 4, prod))
+colnames(interactions_4) <- paste(combn(1:13, 4, paste, collapse="V"), sep = "_")
+interactions_5 <- t(apply(df_mediators, 1, combn, 5, prod))
+colnames(interactions_5) <- paste(combn(1:13, 5, paste, collapse="V"), sep = "_")
+interactions_6 <- t(apply(df_mediators, 1, combn, 6, prod))
+colnames(interactions_6) <- paste(combn(1:13, 6, paste, collapse="V"), sep = "_")
+
+interactions_7 <- t(apply(df_mediators, 1, combn, 7, prod))
+colnames(interactions_7) <- paste(combn(1:13, 7, paste, collapse="V"), sep = "_")
+
+interactions_8 <- t(apply(df_mediators, 1, combn, 8, prod))
+colnames(interactions_8) <- paste(combn(1:13, 8, paste, collapse="V"), sep = "_")
+
+interactions_9 <- t(apply(df_mediators, 1, combn, 9, prod))
+colnames(interactions_9) <- paste(combn(1:13, 9, paste, collapse="V"), sep = "_")
+
+interactions_10 <- t(apply(df_mediators, 1, combn, 10, prod))
+colnames(interactions_10) <- paste(combn(1:13, 10, paste, collapse="V"), sep = "_")
+
+interactions_11 <- t(apply(df_mediators, 1, combn, 11, prod))
+colnames(interactions_11) <- paste(combn(1:13, 11, paste, collapse="V"), sep = "_")
+
+interactions_12 <- t(apply(df_mediators, 1, combn, 12, prod))
+colnames(interactions_12) <- paste(combn(1:13, 12, paste, collapse="V"), sep = "_")
+
+cbind(interactions_2, interactions_3, interactions_4, interactions_5, interactions_6, interactions_7, interactions_8, interactions_9, interactions_10, interactions_11, interactions_12) -> df_mediators
+
+mediator_interactions <- as.matrix(df_mediators)
+str(mediator_interactions)
+
+
+interactions_13 <- t(apply(df_mediators, 1, combn, 13, prod))
+colnames(interactions_13) <- paste(combn(1:13, 13, paste, collapse="V"), sep = "_")
+
+
+for (col in 1:ncol(df_mediators)) {
+  t(apply(1, combn, 2:13, prod))
+}
+
 
 mediator_interactions_2 <- lapply(1:(ncol(combn(1:ncol(df_mediators), m = 2))),
                                 function(y) df_mediators[, combn(1:ncol(df_mediators), m = 2)[,y]])
@@ -61,6 +102,7 @@ str(exposure_variable)
 exposure_variable$SEP -> exposure_SEP_only
 str(exposure_SEP_only)
 as.matrix(exposure_SEP_only)
+exposure_SEP_only <- scale(exposure_SEP_only, scale = FALSE)
 str(exposure_SEP_only)
 #Does not match dat.filter$x structure
 as.matrix(exposure_variable) -> exposure_matrix 
@@ -93,6 +135,7 @@ df_males %>%
 data.matrix(outcome_variable)
 outcome_variable$fcnfsad2 -> outcome_SDQ_only
 as.matrix(outcome_SDQ_only)
+outcome_SDQ_only <- scale(outcome_SDQ_only, scale = FALSE)
 str(outcome_SDQ_only)
 as.matrix(outcome_variable) -> outcome_matrix
 str(outcome_variable)

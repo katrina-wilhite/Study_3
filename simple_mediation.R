@@ -8,7 +8,7 @@ library(dplyr)
 library(haven)
 
 #Load male dataset from Study 2, LSAC wave 6 data, and LSAC wave 8 data 
-load(file = "C:/Users/katri/Documents/ACU/Study_2/Study_2/Study_2/df_males_domsp_weekday.RData") 
+load(file = "Z:/LSAC dataset/Study_2/Study_2/df_males_domsp_weekday.RData") 
 
 lsac_wave6 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb10.sas7bdat")
 
