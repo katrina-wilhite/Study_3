@@ -83,14 +83,6 @@ for (x in 124:ncol(df_males)) {
 #Wooo! 
 
 
-#male_lasso_prosocial <- list(exposure_variable, mediators_interactions, hapsoc)
-#names(male_lasso_prosocial) <- c("exposure", "mediator", "outcome")
-#x <- male_lasso_prosocial$exposure
-#y <- male_lasso_prosocial$outcome
-#med <- male_lasso_prosocial$mediator
-#str(male_lasso_prosocial)
-#Check to ensure the structure is the same as the regmed vignette 
-
 cbind(hapsoc, hahypr, haemot, hapeer,  hacondb, hasdqtb) -> df_outcomes
 class(df_outcomes)
 df_outcomes <- as.data.frame(df_outcomes)
@@ -105,51 +97,190 @@ for(i in 1:ncol(df_outcomes)) {
   x <- outcome_list$exposure
   y <- outcome_list$outcome
   med <- outcome_list$mediator
-  assign(paste0("dat.filter.", outcome), regmed.prefilter(x, med, y)) -> dat.filter
+  assign(paste0("dat.filter.", outcome), regmed.prefilter(x, med, y, k = 10)) -> dat.filter
   x1 <- dat.filter$x
   y1 <- dat.filter$y
   med <- dat.filter$mediator
+  assign(paste0("fit.male.", outcome), regmed.grid(x1, med, y1, lambda.grid, frac.lasso = 0.8)) 
 }
 
+#Find hapsoc mediators 
+plot.regmed.grid(fit.male.hapsoc)
+fit.best.hapsoc <- regmed.grid.bestfit(fit.male.hapsoc)
+summary(fit.best.hapsoc)
 
+edges.med.hapsoc <- regmed.edges(fit.best.hapsoc, type = "mediators")
+plot.regmed.edges(edges.med.hapsoc)
 
-assign(paste0("fit.male.", outcome), regmed.grid(x1, med, y1, lambda.grid, frac.lasso = 0.8)) 
-
-str(male_lasso_hapsoc$outcome)
-
-data(male_lasso_prosocial)
-dat.filter.prosocial <- regmed.prefilter(x, med, y)
-
-
-
-x1 <- dat.filter.prosocial$x
-y1 <- dat.filter.prosocial$y
-med <- dat.filter.prosocial$mediator
-
-fit.male.prosocial <- regmed.grid(x1, med, y1, lambda.grid, frac.lasso = 0.8)
-
-plot.regmed.grid(fit.male.prosocial)
-
-fit.best.prosocial <- regmed.grid.bestfit(fit.male.prosocial)
-summary(fit.best.prosocial)
-
-fit.single <- regmed.fit(x1, med, y1, lambda = .12, frac.lasso =0.8)
-summary(fit.single)
-
-edges.med.prosocial <- regmed.edges(fit.single, type = "mediators")
-plot.regmed.edges(edges.med.prosocial)
-
-edges.med <- regmed.edges(fit.best.prosocial, type = "mediators")
-class(edges.med)
-plot.regmed.edges(edges.med)
-class(fit.best.prosocial)
-#no mediators with individual behaviours 
-
-edges.any <- regmed.edges(fit.best.prosocial, type = "any")
+edges.any.hapsoc <- regmed.edges(fit.best.hapsoc, type = "any")
 plot.regmed.edges(edges.any)
 
-edges.any <- regmed.edges(fit.single, type = "any")
+fit.single.hapsoc <- regmed.fit(x1, med, y1, lambda = .12, frac.lasso =0.8)
+summary(fit.single.hapsoc)
+
+edges.med.hapsoc.single <- regmed.edges(fit.single.hapsoc, type = "mediators")
+plot.regmed.edges(edges.med.hapsoc.single)
+
+edges.any.hapsoc.single <- regmed.edges(fit.single.hapsoc, type = "any")
+plot.regmed.edges(edges.any.hapsoc.single, v.size = 40, x.color = "yellow", y.color = "green", vertex.label.color = "blue" )
+
+install.packages("GGally")
+library(GGally)
+install.packages("network")
+install.packages("sna")
+library(network)
+library(sna)
+library(ggplot2)
+
+ggnet2(edges.med.hapsoc.single)
+class(edges.any.hapsoc.single)
+
+prosocial_mediators <- 
+
+#Graph mediation 
+make_directed_graph(edges.any.hapsoc.single)
+
+#Repeat for hyperactivity 
+plot.regmed.grid(fit.male.hahypr)
+fit.best.hahypr <- regmed.grid.bestfit(fit.male.hahypr)
+summary(fit.best.hahypr)
+
+edges.med.hahypr <- regmed.edges(fit.best.hahypr, type = "mediators")
+plot.regmed.edges(edges.med.hahypr)
+
+edges.any.hahypr <- regmed.edges(fit.best.hahypr, type = "any")
 plot.regmed.edges(edges.any)
+
+fit.single.hahypr <- regmed.fit(x1, med, y1, lambda = .15, frac.lasso =0.8)
+summary(fit.single.hahypr)
+
+edges.med.hahypr.single <- regmed.edges(fit.single.hahypr, type = "mediators")
+plot.regmed.edges(edges.med.hahypr.single)
+
+edges.any.hahypr.single <- regmed.edges(fit.single.hahypr, type = "any")
+plot.regmed.edges(edges.any.hahypr.single)
+
+#Repeat for emotional problems 
+plot.regmed.grid(fit.male.haemot)
+fit.best.haemot <- regmed.grid.bestfit(fit.male.haemot)
+summary(fit.best.haemot)
+
+edges.med.haemot <- regmed.edges(fit.best.haemot, type = "mediators")
+plot.regmed.edges(edges.med.haemot)
+
+edges.any.haemot <- regmed.edges(fit.best.haemot, type = "any")
+plot.regmed.edges(edges.any)
+
+fit.single.haemot <- regmed.fit(x1, med, y1, lambda = .16, frac.lasso =0.8)
+summary(fit.single.haemot)
+
+edges.med.haemot.single <- regmed.edges(fit.single.haemot, type = "mediators")
+plot.regmed.edges(edges.med.haemot.single)
+
+edges.any.haemot.single <- regmed.edges(fit.single.haemot, type = "any")
+plot.regmed.edges(edges.any.haemot.single)
+
+#Repeat for peer problems 
+plot.regmed.grid(fit.male.hapeer)
+fit.best.hapeer <- regmed.grid.bestfit(fit.male.hapeer)
+summary(fit.best.hapeer)
+
+edges.med.hapeer <- regmed.edges(fit.best.hapeer, type = "mediators")
+plot.regmed.edges(edges.med.hapeer)
+
+edges.any.hapeer <- regmed.edges(fit.best.hapeer, type = "any")
+plot.regmed.edges(edges.any)
+
+fit.single.hapeer <- regmed.fit(x1, med, y1, lambda = .13, frac.lasso =0.8)
+summary(fit.single.hapeer)
+
+edges.med.hapeer.single <- regmed.edges(fit.single.hapeer, type = "mediators")
+plot.regmed.edges(edges.med.hapeer.single)
+
+edges.any.hapeer.single <- regmed.edges(fit.single.hapeer, type = "any")
+plot.regmed.edges(edges.any.hapeer.single)
+
+#Repeat for conduct problems 
+plot.regmed.grid(fit.male.hacondb)
+fit.best.hacondb <- regmed.grid.bestfit(fit.male.hacondb)
+summary(fit.best.hacondb)
+
+edges.med.hacondb <- regmed.edges(fit.best.hacondb, type = "mediators")
+plot.regmed.edges(edges.med.hacondb)
+
+edges.any.hacondb <- regmed.edges(fit.best.hacondb, type = "any")
+plot.regmed.edges(edges.any)
+
+fit.single.hacondb <- regmed.fit(x1, med, y1, lambda = .18, frac.lasso =0.8)
+summary(fit.single.hacondb)
+
+edges.med.hacondb.single <- regmed.edges(fit.single.hacondb, type = "mediators")
+plot.regmed.edges(edges.med.hacondb.single)
+
+edges.any.hacondb.single <- regmed.edges(fit.single.hacondb, type = "any")
+plot.regmed.edges(edges.any.hacondb.single)
+
+#Repeat for total socio-emotional problems 
+plot.regmed.grid(fit.male.hasdqtb)
+fit.best.hasdqtb <- regmed.grid.bestfit(fit.male.hasdqtb)
+summary(fit.best.hasdqtb)
+
+edges.med.hasdqtb <- regmed.edges(fit.best.hasdqtb, type = "mediators")
+plot.regmed.edges(edges.med.hasdqtb)
+
+edges.any.hasdqtb <- regmed.edges(fit.best.hasdqtb, type = "any")
+plot.regmed.edges(edges.any)
+
+fit.single.hasdqtb <- regmed.fit(x1, med, y1, lambda = .13, frac.lasso =0.8)
+summary(fit.single.hasdqtb)
+
+edges.med.hasdqtb.single <- regmed.edges(fit.single.hasdqtb, type = "mediators")
+plot.regmed.edges(edges.med.hasdqtb.single)
+
+edges.any.hasdqtb.single <- regmed.edges(fit.single.hasdqtb, type = "any")
+plot.regmed.edges(edges.any.hasdqtb.single)
+
+install.packages("diagram")
+library(diagram)
+med_data_hapsoc <- 
+
+install.packages("glue")
+install.packages("DiagrammeR")
+library(glue)
+library(DiagrammeR)
+
+med_data_hapsoc1 <- 
+  data.frame(
+    lab_x = "Socioeconomic position",
+    lab_m1 = "Mediator 1", 
+    lab_m2 = "Mediator 2", 
+    lab_m3 = "Mediator 3", 
+    lab_y = "Prosocial behaviour",
+    coef_xm1 = ".34",
+    coef_xm2 = ".27",
+    coef_xm3 = ".54",
+    coef_m1y = ".73",
+    coef_m2y = ".64", 
+    coef_m3y = ".19",
+    coef_xy = ".43")
+
+
+
+#Code for running one outcome at a time 
+#male_lasso_prosocial <- list(exposure_variable, mediators_interactions, hapsoc)
+#names(male_lasso_prosocial) <- c("exposure", "mediator", "outcome")
+#x <- male_lasso_prosocial$exposure
+#y <- male_lasso_prosocial$outcome
+#med <- male_lasso_prosocial$mediator
+#str(male_lasso_prosocial)
+#Check to ensure the structure is the same as the regmed vignette 
+#data(male_lasso_prosocial)
+#dat.filter.prosocial <- regmed.prefilter(x, med, y)
+#x1 <- dat.filter.prosocial$x
+#y1 <- dat.filter.prosocial$y
+#med <- dat.filter.prosocial$mediator
+#fit.male.prosocial <- regmed.grid(x1, med, y1, lambda.grid, frac.lasso = 0.8)
+#plot.regmed.grid(fit.male.prosocial)
 
 
 
