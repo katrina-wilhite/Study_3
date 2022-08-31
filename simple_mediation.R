@@ -45,16 +45,14 @@ df_males_na_removed$model3_trajectory_assignments <- as.factor(df_males_na_remov
 df_males_na_removed[,"prosocial"] %>% 
   mutate_at(("prosocial"), ~(scale(.) %>% as.vector)) -> df_males_scaled
 
-
-expFit <- glm(model3_trajectory_assignments*SEP ~ Remoteness + Indigenous + advantage_disadvantage + disadvantage + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, data = df_males_na_removed)
+#Try to fit model to population to see if this will fix error in "neEffdecomp" line
+#expFit <- glm(model3_trajectory_assignments*SEP ~ Remoteness + Indigenous + advantage_disadvantage + disadvantage + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, data = df_males_na_removed)
 expData <- neImpute(prosocial ~ SEP + model3_trajectory_assignments + Remoteness + Indigenous + advantage_disadvantage + disadvantage + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, data = df_males_na_removed)
 neProsocial <- neModel(prosocial ~ SEP0 + SEP1 + Remoteness + Indigenous + advantage_disadvantage + disadvantage + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, expData = expData, se = "robust")
 summary(neProsocial)
 str(neProsocial)
-unlist(neProsocial) -> neProsocial2
 
 effdecomp <- neEffdecomp(neProsocial)
-#Try making a fitted model when I get home. 
 summary(effdecomp)
 
 summary(expData)

@@ -4,7 +4,7 @@ library(dplyr)
 library(haven)
 
 #Load relevant data 
-load(file = "Z:/LSAC dataset/Study_2/Study_2/df_females_domsp_weekday.RData")
+load(file = "Z:/LSAC dataset/Study_2/Study_2/df_female_domsp_weekday.Rdata") -> df_female_domsp_weekday
 
 lsac_wave6 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb10.sas7bdat")
 
@@ -69,8 +69,7 @@ exposure_variable$SEP -> exposure_variable
 str(exposure_variable)
 
 
-df_females[, 124:129]
-for (x in 124:ncol(df_females)) {
+for (x in 123:ncol(df_females)) {
   colnames(df_females[,x]) -> name
   assign(paste(name), df_females %>% 
            select(x) %>%
@@ -78,7 +77,8 @@ for (x in 124:ncol(df_females)) {
   assign(paste0(name),get(name)[,1])
 }
 
-#str(hapsoc)
+
+str(hapsoc)
 #str(hapeer)
 #Wooo! 
 
@@ -113,7 +113,7 @@ edges.med.hapsoc <- regmed.edges(fit.best.hapsoc, type = "mediators")
 plot.regmed.edges(edges.med.hapsoc)
 
 edges.any.hapsoc <- regmed.edges(fit.best.hapsoc, type = "any")
-plot.regmed.edges(edges.any)
+plot.regmed.edges(edges.any.hapsoc)
 
 fit.single.hapsoc <- regmed.fit(x1, med, y1, lambda = .12, frac.lasso =0.8)
 summary(fit.single.hapsoc)
@@ -136,7 +136,7 @@ plot.regmed.edges(edges.med.hahypr)
 edges.any.hahypr <- regmed.edges(fit.best.hahypr, type = "any")
 plot.regmed.edges(edges.any)
 
-fit.single.hahypr <- regmed.fit(x1, med, y1, lambda = .15, frac.lasso =0.8)
+fit.single.hahypr <- regmed.fit(x1, med, y1, lambda = .19, frac.lasso =0.8)
 summary(fit.single.hahypr)
 
 edges.med.hahypr.single <- regmed.edges(fit.single.hahypr, type = "mediators")
@@ -156,7 +156,7 @@ plot.regmed.edges(edges.med.haemot)
 edges.any.haemot <- regmed.edges(fit.best.haemot, type = "any")
 plot.regmed.edges(edges.any)
 
-fit.single.haemot <- regmed.fit(x1, med, y1, lambda = .16, frac.lasso =0.8)
+fit.single.haemot <- regmed.fit(x1, med, y1, lambda = .14, frac.lasso =0.8)
 summary(fit.single.haemot)
 
 edges.med.haemot.single <- regmed.edges(fit.single.haemot, type = "mediators")
@@ -176,7 +176,7 @@ plot.regmed.edges(edges.med.hapeer)
 edges.any.hapeer <- regmed.edges(fit.best.hapeer, type = "any")
 plot.regmed.edges(edges.any)
 
-fit.single.hapeer <- regmed.fit(x1, med, y1, lambda = .12, frac.lasso =0.8)
+fit.single.hapeer <- regmed.fit(x1, med, y1, lambda = .15, frac.lasso =0.8)
 summary(fit.single.hapeer)
 
 edges.med.hapeer.single <- regmed.edges(fit.single.hapeer, type = "mediators")
@@ -196,7 +196,7 @@ plot.regmed.edges(edges.med.hacondb)
 edges.any.hacondb <- regmed.edges(fit.best.hacondb, type = "any")
 plot.regmed.edges(edges.any)
 
-fit.single.hacondb <- regmed.fit(x1, med, y1, lambda = .18, frac.lasso =0.8)
+fit.single.hacondb <- regmed.fit(x1, med, y1, lambda = .15, frac.lasso =0.8)
 summary(fit.single.hacondb)
 
 edges.med.hacondb.single <- regmed.edges(fit.single.hacondb, type = "mediators")
@@ -214,9 +214,9 @@ edges.med.hasdqtb <- regmed.edges(fit.best.hasdqtb, type = "mediators")
 plot.regmed.edges(edges.med.hasdqtb)
 
 edges.any.hasdqtb <- regmed.edges(fit.best.hasdqtb, type = "any")
-plot.regmed.edges(edges.any)
+plot.regmed.edges(edges.any.hasdqtb)
 
-fit.single.hasdqtb <- regmed.fit(x1, med, y1, lambda = .14, frac.lasso =0.8)
+fit.single.hasdqtb <- regmed.fit(x1, med, y1, lambda = .18, frac.lasso =0.8)
 summary(fit.single.hasdqtb)
 
 edges.med.hasdqtb.single <- regmed.edges(fit.single.hasdqtb, type = "mediators")
