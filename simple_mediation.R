@@ -8,7 +8,10 @@ library(dplyr)
 library(haven)
 
 #Load male dataset from Study 2, LSAC wave 6 data, and LSAC wave 8 data 
+<<<<<<< HEAD
 #Update file path 
+=======
+>>>>>>> 05627d727055ab59f9ab00110e25336b72666e6d
 load(file = "Z:/LSAC dataset/Study_2/Study_2/df_males_domsp_weekday.RData") 
 
 lsac_wave6 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb10.sas7bdat")
@@ -46,15 +49,23 @@ df_males_na_removed$model3_trajectory_assignments <- as.factor(df_males_na_remov
 df_males_na_removed[,"prosocial"] %>% 
   mutate_at(("prosocial"), ~(scale(.) %>% as.vector)) -> df_males_scaled
 
+<<<<<<< HEAD
 #I tried to "fit" a model but this did not solve the error "Error in varterms[sapply(cov, grep, varterms)] : invalid subscript type 'list'"
+=======
+#Try to fit model to population to see if this will fix error in "neEffdecomp" line
+>>>>>>> 05627d727055ab59f9ab00110e25336b72666e6d
 #expFit <- glm(model3_trajectory_assignments*SEP ~ Remoteness + Indigenous + advantage_disadvantage + disadvantage + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, data = df_males_na_removed)
 expData <- neImpute(prosocial ~ SEP + model3_trajectory_assignments + Remoteness + Indigenous + advantage_disadvantage + disadvantage + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, data = df_males_na_removed)
 neProsocial <- neModel(prosocial ~ SEP0 + SEP1 + Remoteness + Indigenous + advantage_disadvantage + disadvantage + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, expData = expData, se = "robust")
 summary(neProsocial)
 str(neProsocial)
+<<<<<<< HEAD
 #I trired to "unlist" the results but this did not solve the error
 #unlist(neProsocial) -> neProsocial2
 head(neProsocial)
+=======
+
+>>>>>>> 05627d727055ab59f9ab00110e25336b72666e6d
 effdecomp <- neEffdecomp(neProsocial)
 summary(effdecomp)
 
