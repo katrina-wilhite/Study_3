@@ -36,31 +36,32 @@ inner_join(relevant_male_data, wave_6_relevant_data, by = "hicid") -> domsp_wave
 
 inner_join(domsp_wave6, wave_8_relevant_data, by = "hicid") -> df_males
 
-sapply(df_males, class)
-class(df_males$adv)
+colSums(df_males < -8)
+#2 mental health, 9 mother race, 125 father race
+df_males <- df_males[!(df_males$mental_health == -9),]
+df_males <- df_males[!(df_males$mother_race == -9),]
+df_males <- df_males[!(df_males$father_race == -9),]
 
-#Covert factor variables to factor 
-df_males$adv <- as.factor(df_males$adv)
-df_males$dis <- as.factor(df_males$dis)
-df_males$model3_trajectory_assignments <- as.factor(df_males$model3_trajectory_assignments)
-df_males$Remoteness <- as.factor(df_males$Remoteness)
-df_males$Indigenous <- as.factor(df_males$Indigenous)
-df_males$resources <- as.factor(df_males$resources)
-df_males$education_occupation <- as.factor(df_males$education_occupation)
-df_males$mother_home <- as.factor(df_males$mother_home)
-df_males$father_home <- as.factor(df_males$father_home)
-df_males$mother_race <- as.factor(df_males$mother_race)
-df_males$father_race <- as.factor(df_males$father_race)
-df_males$mental_health <- as.factor(df_males$mental_health)
-
-
-class(df_males$mother_race)
 #Check dataframe for missing data 
 colSums(is.na(df_males))
 #11 participants are missing SDQ data - this accounts for <1% of data and this information is essential for data anlaysis - therefore these participants will be removed from the dataset 
 df_males_na_removed <- na.omit(df_males)
 
-as.factor(df_males_na_removed$ad)
+sapply(df_males, class)
+
+#Covert factor variables to factor 
+df_males_na_removed$adv <- as.factor(df_males_na_removed$adv)
+df_males_na_removed$dis <- as.factor(df_males_na_removed$dis)
+df_males_na_removed$model3_trajectory_assignments <- as.factor(df_males_na_removed$model3_trajectory_assignments)
+df_males_na_removed$Remoteness <- as.factor(df_males_na_removed$Remoteness)
+df_males_na_removed$Indigenous <- as.factor(df_males_na_removed$Indigenous)
+df_males_na_removed$resources <- as.factor(df_males_na_removed$resources)
+df_males_na_removed$education_occupation <- as.factor(df_males_na_removed$education_occupation)
+df_males_na_removed$mother_home <- as.factor(df_males_na_removed$mother_home)
+df_males_na_removed$father_home <- as.factor(df_males_na_removed$father_home)
+df_males_na_removed$mother_race <- as.factor(df_males_na_removed$mother_race)
+df_males_na_removed$father_race <- as.factor(df_males_na_removed$father_race)
+df_males_na_removed$mental_health <- as.factor(df_males_na_removed$mental_health)
 
 df_males_na_removed$model3_trajectory_assignments <- as.factor(df_males_na_removed$model3_trajectory_assignments) 
 #Run analysis 
