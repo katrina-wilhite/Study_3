@@ -40,6 +40,7 @@ sapply(df_males, class)
 class(df_males$adv)
 
 #Covert factor variables to factor 
+df_males$adv <- as.factor(df_males$adv)
 df_males$dis <- as.factor(df_males$dis)
 df_males$model3_trajectory_assignments <- as.factor(df_males$model3_trajectory_assignments)
 df_males$Remoteness <- as.factor(df_males$Remoteness)
@@ -51,6 +52,7 @@ df_males$father_home <- as.factor(df_males$father_home)
 df_males$mother_race <- as.factor(df_males$mother_race)
 df_males$father_race <- as.factor(df_males$father_race)
 df_males$mental_health <- as.factor(df_males$mental_health)
+
 
 class(df_males$mother_race)
 #Check dataframe for missing data 
