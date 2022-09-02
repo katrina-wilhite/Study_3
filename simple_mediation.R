@@ -47,7 +47,6 @@ colSums(is.na(df_males))
 #11 participants are missing SDQ data - this accounts for <1% of data and this information is essential for data anlaysis - therefore these participants will be removed from the dataset 
 df_males_na_removed <- na.omit(df_males)
 
-sapply(df_males, class)
 
 #Covert factor variables to factor 
 df_males_na_removed$adv <- as.factor(df_males_na_removed$adv)
@@ -63,13 +62,15 @@ df_males_na_removed$mother_race <- as.factor(df_males_na_removed$mother_race)
 df_males_na_removed$father_race <- as.factor(df_males_na_removed$father_race)
 df_males_na_removed$mental_health <- as.factor(df_males_na_removed$mental_health)
 
-df_males_na_removed$model3_trajectory_assignments <- as.factor(df_males_na_removed$model3_trajectory_assignments) 
 #Run analysis 
-df_males_na_removed[,"prosocial"] %>% 
-  mutate_at(("prosocial"), ~(scale(.) %>% as.vector)) -> df_males_scaled
+df_males_na_removed$prosocial <- scale(df_males_na_removed$prosocial)
+
+df_males_na_removed$mother_race <- df_males_na_removed$mother_race
+df_males_na_removed$mother_race <- substr(df_males_na_removed$mother_race, 1, 1)
+df_males_na_removed$father_race <- substr(df_males_na_removed$father_race, 1,1)
 
 #expFit <- glm(model3_trajectory_assignments*SEP ~ Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, data = df_males_na_removed)
-expData <- neImpute(prosocial ~ SEP + model3_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, data = df_males_na_removed)
+expData <- neImpute(prosocial ~ SEP + model3_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race,  data = df_males_na_removed)
 neProsocial <- neModel(prosocial ~ SEP0 + SEP1 + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, expData = expData, se = "robust")
 summary(neProsocial)
 str(neProsocial)
