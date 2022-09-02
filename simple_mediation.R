@@ -39,11 +39,20 @@ inner_join(domsp_wave6, wave_8_relevant_data, by = "hicid") -> df_males
 sapply(df_males, class)
 class(df_males$adv)
 
-for (x in c(2,4:5,7:15(df_males))) {
-  
-}
+#Covert factor variables to factor 
+df_males$dis <- as.factor(df_males$dis)
+df_males$model3_trajectory_assignments <- as.factor(df_males$model3_trajectory_assignments)
+df_males$Remoteness <- as.factor(df_males$Remoteness)
+df_males$Indigenous <- as.factor(df_males$Indigenous)
+df_males$resources <- as.factor(df_males$resources)
+df_males$education_occupation <- as.factor(df_males$education_occupation)
+df_males$mother_home <- as.factor(df_males$mother_home)
+df_males$father_home <- as.factor(df_males$father_home)
+df_males$mother_race <- as.factor(df_males$mother_race)
+df_males$father_race <- as.factor(df_males$father_race)
+df_males$mental_health <- as.factor(df_males$mental_health)
 
-df_males$adv <- as.factor(df_males$adv)
+class(df_males$mother_race)
 #Check dataframe for missing data 
 colSums(is.na(df_males))
 #11 participants are missing SDQ data - this accounts for <1% of data and this information is essential for data anlaysis - therefore these participants will be removed from the dataset 
