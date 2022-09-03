@@ -68,6 +68,9 @@ df_males_na_removed$prosocial <- scale(df_males_na_removed$prosocial)
 df_males_na_removed$mother_race <- df_males_na_removed$mother_race
 df_males_na_removed$mother_race <- substr(df_males_na_removed$mother_race, 1, 1)
 df_males_na_removed$father_race <- substr(df_males_na_removed$father_race, 1,1)
+df_males_na_removed$mother_race <- as.factor(df_males_na_removed$mother_race)
+df_males_na_removed$father_race <- as.factor(df_males_na_removed$father_race)
+sapply(df_males_na_removed, class)
 
 #expFit <- glm(model3_trajectory_assignments*SEP ~ Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race, data = df_males_na_removed)
 expData <- neImpute(prosocial ~ SEP + model3_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race,  data = df_males_na_removed)
