@@ -5,23 +5,22 @@ word_document: default
 pdf_document: default
 ---
   
-  ```{r include=FALSE}
+```{r include=FALSE}
 #Make Descriptive Statistics Table
-#install.packages("table1")
+install.packages("table1")
 library("table1")
 library("haven")
-#install.packages("tidyLPA")
+install.packages("tidyLPA")
 library("tidyLPA")
 library("dplyr")
 library ("tidyr")
 library("lubridate")
 library("reshape2")
-#install.packages("mice")
-#install.packages("janitor")
+install.packages("janitor")
 library("janitor")
-#library("crimCV")
-#library("kableExtra")
-#install.packages("magrittr")
+library("crimCV")
+library("kableExtra")
+install.packages("magrittr")
 library("stringr")
 library("magrittr")
 #install.packages("devto
@@ -30,25 +29,28 @@ library("magrittr")
 
 ```{r echo=FALSE}
 #Select relevant columns for the descriptive statistics table
-load(file = "Z:/LSAC dataset/Study_2/Study_2/No_outliers_Multi_Trajecotry_Analysis_Domain_Specific_Movement_Behaviours.RData")
+load(file = "Z:/LSAC dataset/Study_3/males_Study3_lasso.Rdata")
+load(file = "Z:/LSAC dataset/Study_3/females_Study3_lasso.Rdata")
 
-No_outliers_Multi_Trajecotry_Analysis_Domain_Specific_Movement_Behaviours %>% 
-  filter(day_of_week_at_10 ==1) %>% 
-  select(-c(hicid, day_of_week_at_10, day_of_week_at_12, day_of_week_at_14, school_attendance_at_10, school_attendance_at_12, school_attendance_at_14, active_transport_scaled_10:sleep_scaled_14)) -> df
+#Select relevant columns for descriptive statistics from male and female dataframes, then combine into one dataframe
+df_males <- df_males %>% 
+  dplyr::select(hicid, active_transport_at_10:nighttime_sleep_at_10, Age:Remoteness, fcnfsad2, fcnfsda2, fcnfser2, fcnfseo2, hapsoc:hasdqtb)
+df_females <- df_females %>% 
+  dplyr::select(hicid, active_transport_at_10:nighttime_sleep_at_10, Age:Remoteness, fcnfsad2, fcnfsda2, fcnfser2, fcnfseo2, hapsoc:hasdqtb)
+df <- rbind(df_males, df_females, by = "hicid")
 
 #Arrange the columns in the appropriate order
-df %>% 
-  select(order(colnames(df))) %>% 
+descriptive_statistics <- df %>% 
   relocate(c(Age, Indigenous, Remoteness, Sex, SEP), .before = active_transport_at_10) %>% 
-  relocate(LPA_at_10:LPA_at_14, .after = unstructured_MVPA_at_14) %>% 
-  relocate(MVPA_at_10:MVPA_at_14, .after = LPA_at_14) %>% 
-  relocate(SB_at_10:SB_at_14, .after = MVPA_at_14) %>% 
-  relocate(sleep_at_10:sleep_at_14, .after = SB_at_14) -> descriptive_statistics 
-descriptive_statistics <- data.frame(append(descriptive_statistics, list("Subject_Details" = "", "Domain_Specific_Movement_Behaviours" = "", "General_Movement_Behaviours" = ""), after = 1))
+  relocate(fcnfsad2:fcnfseo2, .before = active_transport_at_10) %>% 
+  relocate(hapsoc:hasdqtb, .before = active_transport_at_10)   
+
+
+descriptive_statistics <- data.frame(append(descriptive_statistics, list("Subject_Details" = "", "Strenghts_and_Difficulties_Questionnaire_Scores" = "", "Domain_Specific_Movement_Behaviours" = ""), after = 1))
 descriptive_statistics %>% 
   relocate("Subject_Details", .before = Age) %>% 
   relocate("Domain_Specific_Movement_Behaviours", .before = active_transport_at_10) %>% 
-  relocate("General_Movement_Behaviours", .before = LPA_at_10) -> descriptive_statistics
+  relocate("Strenghts_and_Difficulties_Questionnaire_Scores", .before = hapsoc) -> descriptive_statistics
 #Clean column names
 colnames(descriptive_statistics) <- gsub("_", " ", colnames(descriptive_statistics))
 colnames(descriptive_statistics) <- str_to_title(colnames(descriptive_statistics))
@@ -57,8 +59,8 @@ colnames(descriptive_statistics) <- gsub("To", "to", colnames(descriptive_statis
 colnames(descriptive_statistics) <- gsub("Light I", "Light-I", colnames(descriptive_statistics))
 colnames(descriptive_statistics) <- gsub("Moderate", "Moderate-", colnames(descriptive_statistics))
 colnames(descriptive_statistics) <- gsub("Vigorous", "Vigorous-", colnames(descriptive_statistics))
-rename(descriptive_statistics, "Socioeconomic Position" = Sep) -> descriptive_statistics
-
+dplyr::rename(descriptive_statistics, "Socioeconomic Position" = Sep) -> descriptive_statistics
+dplyr::rename(df, fcnfsad2 = "Advantage Disadvantage", fcnfsda2 = "Disadvantage", fcnfser2 = "Resources", fcnfseo2 ="Education and Occupation", hapscop = "Prosociality", hahpyr = "Hyperactivity", haemot = "Emotional Health", hapeer = "Peer Problems", hacondb = "Conduct Problems", hasdqtb = "Total Score")
 
 #Define factor variables
 descriptive_statistics$Indigenous <-
