@@ -7,60 +7,85 @@ pdf_document: default
   
 ```{r include=FALSE}
 #Make Descriptive Statistics Table
-install.packages("table1")
+#install.packages("table1")
 library("table1")
 library("haven")
-install.packages("tidyLPA")
+#install.packages("tidyLPA")
 library("tidyLPA")
 library("dplyr")
 library ("tidyr")
 library("lubridate")
 library("reshape2")
-install.packages("janitor")
+#install.packages("janitor")
 library("janitor")
 library("crimCV")
 library("kableExtra")
-install.packages("magrittr")
+#install.packages("magrittr")
 library("stringr")
 library("magrittr")
 #install.packages("devto
 
 ```
 
-```{r echo=FALSE}
-#Select relevant columns for the descriptive statistics table
-load(file = "Z:/LSAC dataset/Study_3/males_Study3_lasso.Rdata")
-load(file = "Z:/LSAC dataset/Study_3/females_Study3_lasso.Rdata")
+```{r}
+#Load female domain-specific data and Wave 8 data 
+load(file = "Z:/LSAC dataset/Study_2/Study_2/df_females_domsp_weekday.Rdata") 
+lsac_wave6 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb10.sas7bdat")
+lsac_wave8 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb14.sas7bdat")
 
-#Select relevant columns for descriptive statistics from male and female dataframes, then combine into one dataframe
-df_males <- df_males %>% 
-  dplyr::select(hicid, active_transport_at_10:nighttime_sleep_at_10, Age:Remoteness, fcnfsad2, fcnfsda2, fcnfser2, fcnfseo2, hapsoc:hasdqtb)
-df_females <- df_females %>% 
-  dplyr::select(hicid, active_transport_at_10:nighttime_sleep_at_10, Age:Remoteness, fcnfsad2, fcnfsda2, fcnfser2, fcnfseo2, hapsoc:hasdqtb)
+#Select relevanat columns
+relevant_wave6_data <- lsac_wave6 %>% 
+  select(hicid, fcnfsad2d, fcnfsda2d, fcnfser2d, fcnfseo2d, fmoth, ffath, fsc13a1i, zf09fm, zf09ff)
+relevant_wave8_data <- lsac_wave8 %>% 
+  select(hicid, hapsoc:hasdqtb)
+df_domsp <- df_female_domsp_weekday %>% 
+  select(hicid, active_transport_at_10:nighttime_sleep_at_10, Age:Remoteness)
+
+#Join datasets
+domsp_wave6 <- inner_join(df_domsp, relevant_wave6_data, by = "hicid") 
+df_females <- inner_join(domsp_wave6, relevant_wave8_data, by = "hicid") 
+#Take out missing data 
+df_females <- na.omit(df_females)
+```
+```{r}
+#Load male domain-specific 
+load(file = "Z:/LSAC dataset/Study_2/Study_2/df_males_domsp_weekday.RData")
+
+#Select relevanat columns
+df_domsp_male <- df_male_domsp_weekday %>% 
+  select(hicid, active_transport_at_10:nighttime_sleep_at_10, Age:Remoteness)
+
+#Join datasets
+domsp_wave6_male <- inner_join(df_domsp_male, relevant_wave6_data, by = "hicid") 
+df_males <- inner_join(domsp_wave6_male, relevant_wave8_data, by = "hicid") 
+#Take out missing data 
+df_males <- na.omit(df_males)
+```
+
+```{r echo=FALSE}
+#Combine male and female data 
 df <- rbind(df_males, df_females, by = "hicid")
 
 #Arrange the columns in the appropriate order
 descriptive_statistics <- df %>% 
-  relocate(c(Age, Indigenous, Remoteness, Sex, SEP), .before = active_transport_at_10) %>% 
-  relocate(fcnfsad2:fcnfseo2, .before = active_transport_at_10) %>% 
+  relocate(c(Age, Indigenous, Remoteness, Sex, SEP, fmoth:zf09ff), .before = active_transport_at_10) %>% 
+  relocate(fcnfsad2d:fcnfseo2d, .before = active_transport_at_10) %>% 
   relocate(hapsoc:hasdqtb, .before = active_transport_at_10)   
 
 
-descriptive_statistics <- data.frame(append(descriptive_statistics, list("Subject_Details" = "", "Strenghts_and_Difficulties_Questionnaire_Scores" = "", "Domain_Specific_Movement_Behaviours" = ""), after = 1))
-descriptive_statistics %>% 
+descriptive_statistics <- data.frame(append(descriptive_statistics, list("Subject_Details" = "", "Strenghts_and_Difficulties_Questionnaire_Scores" = "", "Socioeconomic_Indexes_for_Areas" = "", "Domain_Specific_Movement_Behaviours" = ""), after = 1))
+
+descriptive_statistics <- descriptive_statistics %>% 
   relocate("Subject_Details", .before = Age) %>% 
   relocate("Domain_Specific_Movement_Behaviours", .before = active_transport_at_10) %>% 
-  relocate("Strenghts_and_Difficulties_Questionnaire_Scores", .before = hapsoc) -> descriptive_statistics
-#Clean column names
-colnames(descriptive_statistics) <- gsub("_", " ", colnames(descriptive_statistics))
-colnames(descriptive_statistics) <- str_to_title(colnames(descriptive_statistics))
-colnames(descriptive_statistics) <- gsub("At", "at", colnames(descriptive_statistics))
-colnames(descriptive_statistics) <- gsub("To", "to", colnames(descriptive_statistics))
-colnames(descriptive_statistics) <- gsub("Light I", "Light-I", colnames(descriptive_statistics))
-colnames(descriptive_statistics) <- gsub("Moderate", "Moderate-", colnames(descriptive_statistics))
-colnames(descriptive_statistics) <- gsub("Vigorous", "Vigorous-", colnames(descriptive_statistics))
-dplyr::rename(descriptive_statistics, "Socioeconomic Position" = Sep) -> descriptive_statistics
-dplyr::rename(df, fcnfsad2 = "Advantage Disadvantage", fcnfsda2 = "Disadvantage", fcnfser2 = "Resources", fcnfseo2 ="Education and Occupation", hapscop = "Prosociality", hahpyr = "Hyperactivity", haemot = "Emotional Health", hapeer = "Peer Problems", hacondb = "Conduct Problems", hasdqtb = "Total Score")
+  relocate("Strenghts_and_Difficulties_Questionnaire_Scores", .before = hapsoc) %>% 
+  relocate("Socioeconomic_Indexes_for_Areas", .before = fcnfsad2d)
+#Reduce mother and father race to one digit 
+descriptive_statistics$zf09fm <- substr(descriptive_statistics$zf09fm, 1, 1) 
+descriptive_statistics$zf09ff <- substr(descriptive_statistics$zf09ff, 1, 1)
+descriptive_statistics$SEP <- as.numeric(descriptive_statistics$SEP) %>% 
+  round(digits = 2) 
+descriptive_statistics <- na.omit(descriptive_statistics)
 
 #Define factor variables
 descriptive_statistics$Indigenous <-
@@ -72,7 +97,56 @@ descriptive_statistics$Sex <-
 descriptive_statistics$Remoteness <-
   factor(descriptive_statistics$Remoteness, levels = c(0, 1, 2, 3, 4, 9),
          labels = c("Highly Accessible", "Accessible", "Moderately Accessible", "Remote", "Very Remote", "Not determined")) 
+descriptive_statistics$fmoth <-
+    factor(descriptive_statistics$fmoth, levels = c(0,1),
+           labels = c("No", "Yes"))
+descriptive_statistics$ffath <-
+    factor(descriptive_statistics$ffath, levels = c(0,1),
+           labels = c("No", "Yes"))
+descriptive_statistics$fsc13a1i <-
+    factor(descriptive_statistics$fsc13a1i, levels = c(0,1),
+           labels = c("No", "Yes"))
+descriptive_statistics$zf09fm <-
+    factor(descriptive_statistics$zf09fm, levels = c(0:9),
+           labels = c("Unknown", "Oceania and Antarctica", "Northwest Europe", "Southern and Eastern Europe", "North Africa and The Middle East", "Southeast Asia", "Northeast Aisa", "Southern and Central Asia", "Americas", "Sub Saharan Africa"))
+descriptive_statistics$zf09ff <-
+    factor(descriptive_statistics$zf09ff, levels = c(0:9),
+           labels = c("Unknown", "Oceania and Antarctica", "Northwest Europe", "Southern and Eastern Europe", "North Africa and The Middle East", "Southeast Asia", "Northeast Aisa", "Southern and Central Asia", "Americas", "Sub Saharan Africa"))
+descriptive_statistics$fcnfsad2d <-
+    factor(descriptive_statistics$fcnfsad2d, levels = c(1:10))
+descriptive_statistics$fcnfsda2d <-
+    factor(descriptive_statistics$fcnfsda2d, levels = c(1:10))
+descriptive_statistics$fcnfseo2d <-
+    factor(descriptive_statistics$fcnfseo2d, levels = c(1:10))
+descriptive_statistics$fcnfser2d <-
+    factor(descriptive_statistics$fcnfser2d, levels = c(1:10))
 
+
+numeric_columns <- c(3, 7, 20:25, 27:38)
+for (x in numeric_columns) {
+  name <- colnames(descriptive_statistics[x])
+  descriptive_statistics[[name]] <- as.numeric(descriptive_statistics[[name]])
+}
+#Check to make sure I didn't make any mistakes 
+sapply(descriptive_statistics, class)
+#Not all columns converted to numeric for some reason 
+descriptive_statistics$hapsoc <- as.numeric(descriptive_statistics$hapsoc)
+descriptive_statistics$active_transport_at_10 <- as.numeric(descriptive_statistics$active_transport_at_10)
+descriptive_statistics$Domain_Specific_Movement_Behaviours <- as.character(descriptive_statistics$Domain_Specific_Movement_Behaviours)
+#Clean column names
+colnames(descriptive_statistics) <- gsub("_", " ", colnames(descriptive_statistics))
+colnames(descriptive_statistics) <- str_to_title(colnames(descriptive_statistics))
+colnames(descriptive_statistics) <- gsub("At", "at", colnames(descriptive_statistics))
+colnames(descriptive_statistics) <- gsub("To", "to", colnames(descriptive_statistics))
+colnames(descriptive_statistics) <- gsub("Sb", "Sedentary Behaviour", colnames(descriptive_statistics))
+colnames(descriptive_statistics) <- gsub("Lpa", "Light Physical Activity", colnames(descriptive_statistics))
+colnames(descriptive_statistics) <- gsub("Mvpa", "Moderate-Vigorous Physical Activity", colnames(descriptive_statistics))
+descriptive_statistics <- dplyr::rename(descriptive_statistics, "Socioeconomic Position" = Sep) 
+descriptive_statistics <- dplyr::rename(descriptive_statistics, "Relative Socioeconomic Advantage and Disadvantage" = Fcnfsad2d, "Relative Socioeconomic Disadvantage" = Fcnfsda2d, "Economic Resources" = Fcnfser2d, "Education and Occupation" = Fcnfseo2d, "Prosociality Scale" = Hapsoc, "Hyperactivity Scale" = Hahypr, "Emotional Symptoms Scale" = Haemot, "Peer Problems Scale" = Hapeer, "Conduct Problems Scale" = Hacondb, "Total Score" = Hasdqtb, "Mother at Home" = Fmoth, "Father at Home" = Ffath, "Parent Sought Help for Mental Health" = Fsc13a1i, "Mother Ethnicity" = Zf09fm, "Father Ethnicity" = Zf09ff)
+
+#Remove hicid column 
+descriptive_statistics <- descriptive_statistics %>% 
+  select(-Hicid)
 
 #Write rendering function for Mean and counts
 my.render.cont <- function(x) {
