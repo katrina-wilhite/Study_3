@@ -1,93 +1,55 @@
-# Simple Mediation
+#RQ: Does domain-specific movement behaviour profile membership mediate the relationship between socioeconomic position and socio-emotional outcomes in children?
+##Simple mediation for males
 
-# Install appropriate libraries
-# install.packages("medflex")
-# Open libraries
 library(medflex)
 library(dplyr)
 library(haven)
-# install.packages("remotes")
-#remotes::install_github("r-lib/styler")
-#install.packages("styler")
+library(rmarkdown)
 
-# Load male dataset from Study 2, LSAC wave 6 data, and LSAC wave 8 data
-load(file = "Z:/LSAC dataset/Study_2/Study_2/df_males_domsp_weekday.RData")
+source("./load_data_by_sex.R")
+source("./munging.R")
+male_data()
+munge("male")
+female_data()
+munge("female")
 
-lsac_wave6 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb10.sas7bdat")
-
-lsac_wave8 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb14.sas7bdat")
-
-# Select relevant columns from male dataset (hicid, profile membership, age, remoteness, Indigenous status, SEP)
-df_male_domsp_weekday %>%
-  select(hicid, model3_trajectory_assignments, Age, Remoteness, Indigenous, SEP) -> relevant_male_data
-
-# Select relevant columns from LSAC wave 6 (SEIFA varialbes), parents living at home, parent mental health, parent ethnicity)
-lsac_wave6 %>%
-  select(hicid, fcnfsad2d, fcnfsda2d, fcnfser2d, fcnfseo2d, fmoth, ffath, fsc13a1i, zf09fm, zf09ff) -> wave_6_relevant_data
-
-# Update column names to make sense
-colnames(wave_6_relevant_data)[2:10] <- c("adv", "dis", "resources", "education_occupation", "mother_home", "father_home", "mental_health", "mother_race", "father_race")
-
-# Select relevant columns from LSAC Wave 8 (SDQ results)
-lsac_wave8 %>%
-  select(hicid, hapsoc:hasdqtb) -> wave_8_relevant_data
-
-# Update column names to make sense
-colnames(wave_8_relevant_data)[2:7] <- c("prosocial", "hyperactivity", "emotional", "peer", "conduct", "total")
-
-# Combine columns to make new dataset
-inner_join(relevant_male_data, wave_6_relevant_data, by = "hicid") -> domsp_wave6
-inner_join(domsp_wave6, wave_8_relevant_data, by = "hicid") -> df_males
-
-#Take out participants with missing covariate data 
-colSums(df_males < -8)
-# 2 mental health, 9 mother race, 125 father race
-df_males <- df_males[!(df_males$mental_health == -9), ]
-df_males <- df_males[!(df_males$mother_race == -9), ]
-df_males <- df_males[!(df_males$father_race == -9), ]
-
-# Check dataframe for missing data reported as N/A
-colSums(is.na(df_males))
-# 11 participants are missing SDQ data - this accounts for <1% of data and this information is essential for data anlaysis - therefore these participants will be removed from the dataset
-df_males_na_removed <- na.omit(df_males)
-
-#Reduce mother and father race to 1 digit and convert to factor 
-df_males_na_removed$mother_race <- substr(df_males_na_removed$mother_race, 1, 1) %>% 
-  as.factor()
-df_males_na_removed$father_race <- substr(df_males_na_removed$father_race, 1, 1) %>% 
-  as.factor()
-
-# Covert relevant columns to factors 
-factor_columns <- c(2,4:5,7:13)
-for (x in factor_columns) {
-  name <- colnames(df_males_na_removed[,x])
- df_males_na_removed[[name]] <- as.factor(df_males_na_removed[[name]])
-}
-
-#Scale all socio-emotional outcome variables 
-df_males_na_removed[,16:21] <- scale(df_males_na_removed[,16:21])
-
-#Run loop for all socio-emotional variables 
-for (x in 16:ncol(df_males_na_removed)) {
-  name <- colnames(df_males_na_removed[,x])
-  assign("objectname", (paste(name,"~",("SEP + model3_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race"))))
-  expData <- assign(paste0("expData_", name), neImpute(objectname, data = df_males_na_removed))
+#Run loop for all socio-emotional variables
+for (x in 16:ncol(df_male)) {
+  name <- colnames(df_male[,x])
+  assign("objectname", (paste(name,"~","SEP + model3_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race")))
+  expData <- assign(paste0("expData_", name), neImpute(objectname, data = df_male))
   assign("model", (paste(name,"~",("SEP0 + SEP1 + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race"))))
   outcome_results <- assign(paste0("ne_", name), neModel(model, expData = expData, se = "robust"))
-  assign(paste0("effdecomp_", name), neEffdecomp(outcome_results))
-  }
+  assign(paste0("male_effdecomp_", name), envir = globalenv(), neEffdecomp(outcome_results))
+}
+#Summary of results in "results__male_mediation.Rmd" 
 
-#Check results for mediation 
-summary(effdecomp_prosocial)
-#No mediation with prosocial behaviour 
-summary(effdecomp_hyperactivity)
-#No mediation with hyperactivity 
-summary(effdecomp_emotional)
-#No mediation with emotional problems 
-summary(effdecomp_peer)
-#No mediation with peer problems 
-summary(effdecomp_conduct)
-#No mediation with conduct problems 
-summary(effdecomp_total)
-#No mediation with total strengths and difficulties 
+for (x in 16:ncol(df_female)) {
+  name <- colnames(df_female[,x])
+  assign("objectname", (paste(name,"~","SEP + model4_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race")))
+  expData <- assign(paste0("expData_", name), neImpute(objectname, data = df_female))
+  assign("model", (paste(name,"~",("SEP0 + SEP1 + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race"))))
+  outcome_results <- assign(paste0("ne_", name), neModel(model, expData = expData, se = "robust"))
+  assign(paste0("female_effdecomp_", name), envir = globalenv(), neEffdecomp(outcome_results))
+}
 
+
+#I tried to make a function but I couldn't get it to work! I couldn't figure it out but it kept returning erros out on the last line. No clue why.  
+# simple_mediation <- function(sex) {
+# if (sex == "male"){
+#   model_used = "model3_trajectory_assignments"
+#  df = df_male
+# }
+# else if (sex =="female"){
+#  model_used = "model4_trajectory_assignments"
+#  df = df_female
+# }
+# for (x in 16:ncol(df)) {
+#  name <- colnames(df[,x])
+#  assign("objectname", (paste(name,"~","SEP +", model_used, "+ Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race")))
+#  expData <- assign(paste0("expData_", name), neImpute(eval(parse(text=objectname)), data = df))
+#  assign("model", (paste(name,"~",("SEP0 + SEP1 + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race"))))
+#  outcome_results <- assign(paste0("ne_", name), neModel(model, expData = expData, se = "robust"))
+#  assign(paste0(sex, "_effdecomp_", name), envir = globalenv(), neEffdecomp(outcome_results))
+# }
+# }
