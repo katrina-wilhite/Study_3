@@ -7,20 +7,37 @@ source("./lasso_munging.R")
 munge_lasso("male")
 munge_lasso("female")
 
-#Make lambda grid to be used in function to find best fit model 
+
+
+#Run loop to prefilter mediators and fit to model 
 lambda_grid <- seq(from = 0.4, to = 0.01, by = -0.01)
 #Run loop to prefilter mediators and fit to model 
+for(i in 1:ncol(df_female_outcomes)) {
+  outcome <- colnames(df_female_outcomes)[i]  
+  outcome_list <- assign(paste0("female_lasso_",outcome), list(exposure_variable, mediators_interactions, df_female_outcomes[,i])) 
+  names(outcome_list) <- c("exposure", "mediator", "outcome")
+  x <- outcome_list$exposure
+  y <- outcome_list$outcome
+  med <- outcome_list$mediator
+  dat_filter <- assign(paste0("dat_filter_", outcome), regmed_prefilter(x, med, y, k = 100)) 
+  x1 <- dat_filter$x
+  y1 <- dat_filter$y
+  med <- dat_filter$mediator
+  assign(paste0("fit_female_", outcome), regmed_grid(x1, med, y1, lambda_grid, frac_lasso = 0.8)) 
+}
 
 
-
-female_outcomes = as.matrix(df_female_outcomes)
-y <- female_outcomes
-x <- female_exposure
-med <- female_lasso_mediators
-fit_grid_female <- mvregmed.grid(x, med, y, lambda_grid)
-
-male_outcomes = as.matrix(df_male_outcomes)
-y1 <- female_outcomes
-x1 <- female_exposure
-med1 <- female_lasso_mediators
-fit_grid_male <- mvregmed.grid(x1, med1, y1, lambda_grid)
+#Run loop to prefilter mediators and fit to model 
+for(i in 1:ncol(df_male_outcomes)) {
+  outcome <- colnames(df_male_outcomes)[i]  
+  outcome_list <- assign(paste0("male_lasso_",outcome), list(exposure_variable, mediators_interactions, df_male_outcomes[,i])) 
+  names(outcome_list) <- c("exposure", "mediator", "outcome")
+  x <- outcome_list$exposure
+  y <- outcome_list$outcome
+  med <- outcome_list$mediator
+  dat_filter <- assign(paste0("dat_filter_", outcome), regmed_prefilter(x, med, y, k = 100)) 
+  x1 <- dat_filter$x
+  y1 <- dat_filter$y
+  med <- dat_filter$mediator
+  assign(paste0("fit_male_", outcome), regmed_grid(x1, med, y1, lambda_grid, frac_lasso = 0.8)) 
+}
