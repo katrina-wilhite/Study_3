@@ -19,11 +19,11 @@ for(i in 1:ncol(df_female_outcomes)) {
   x <- outcome_list$exposure
   y <- outcome_list$outcome
   med <- outcome_list$mediator
-  dat_filter <- assign(paste0("dat_filter_", outcome), regmed_prefilter(x, med, y, k = 100)) 
+  dat_filter <- assign(paste0("dat_filter_", outcome), regmed.prefilter(x, med, y, k = 100)) 
   x1 <- dat_filter$x
   y1 <- dat_filter$y
   med <- dat_filter$mediator
-  assign(paste0("fit_female_", outcome), regmed_grid(x1, med, y1, lambda_grid, frac_lasso = 0.8)) 
+  assign(paste0("fit_female_", outcome), regmed.grid(x1, med, y1, lambda_grid, frac.lasso = 0.8)) 
 }
 
 
@@ -35,9 +35,9 @@ for(i in 1:ncol(df_male_outcomes)) {
   x <- outcome_list$exposure
   y <- outcome_list$outcome
   med <- outcome_list$mediator
-  dat_filter <- assign(paste0("dat_filter_", outcome), regmed_prefilter(x, med, y, k = 100)) 
+  dat_filter <- assign(paste0("dat_filter_", outcome), regmed.prefilter(x, med, y, k = 100)) 
   x1 <- dat_filter$x
   y1 <- dat_filter$y
   med <- dat_filter$mediator
-  assign(paste0("fit_male_", outcome), regmed_grid(x1, med, y1, lambda_grid, frac_lasso = 0.8)) 
+  assign(paste0("fit_male_", outcome), regmed.grid(x1, med, y1, lambda_grid, frac.lasso = 0.8)) 
 }
