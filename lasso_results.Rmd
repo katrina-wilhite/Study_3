@@ -1,0 +1,101 @@
+```{r}
+library(regmed)
+library(dplyr)
+library(haven)
+source("./lasso_mediation.R")
+```
+
+```{r}
+#Fit results for female prosocial behavior 
+plot.regmed.grid(fit_female_hapsoc)
+female_hapsoc_fit_best <- regmed.grid.bestfit(fit_female_hapsoc)
+summary(female_hapsoc_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for female hyperactivity 
+plot.regmed.grid(fit_female_hahypr)
+female_hahypr_fit_best <- regmed.grid.bestfit(fit_female_hahypr)
+summary(female_hahypr_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for female emotional problems  
+plot.regmed.grid(fit_female_haemot)
+female_haemot_fit_best <- regmed.grid.bestfit(fit_female_haemot)
+summary(female_haemot_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for female peer problems  
+plot.regmed.grid(fit_female_hapeer)
+female_hapeer_fit_best <- regmed.grid.bestfit(fit_female_hapeer)
+summary(female_hapeer_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for female conduct problems 
+plot.regmed.grid(fit_female_hacondb)
+female_hacondb_fit_best <- regmed.grid.bestfit(fit_female_hacondb)
+summary(female_hacondb_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for female total SDQ score  
+plot.regmed.grid(fit_female_hasdqtb)
+female_hasdqtb_fit_best <- regmed.grid.bestfit(fit_female_hasdqtb)
+summary(female_hasdqtb_fit_best)
+#All coefficients are 0 
+```
+```{r}
+#Fit results for male prosocial behavior 
+plot.regmed.grid(fit_male_hapsoc)
+male_hapsoc_fit_best <- regmed.grid.bestfit(fit_male_hapsoc)
+summary(male_hapsoc_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for male hyperactivity 
+plot.regmed.grid(fit_male_hahypr)
+male_hahypr_fit_best <- regmed.grid.bestfit(fit_male_hahypr)
+summary(male_hahypr_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for male emotional problems  
+plot.regmed.grid(fit_male_haemot)
+male_haemot_fit_best <- regmed.grid.bestfit(fit_male_haemot)
+summary(male_haemot_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for male peer problems  
+plot.regmed.grid(fit_male_hapeer)
+male_hapeer_fit_best <- regmed.grid.bestfit(fit_male_hapeer)
+summary(male_hapeer_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for male conduct problems 
+plot.regmed.grid(fit_male_hacondb)
+male_hacondb_fit_best <- regmed.grid.bestfit(fit_male_hacondb)
+summary(male_hacondb_fit_best)
+#All coefficients are 0 
+```
+
+```{r}
+#Fit results for male total SDQ score  
+plot.regmed.grid(fit_male_hasdqtb)
+male_hasdqtb_fit_best <- regmed.grid.bestfit(fit_male_hasdqtb)
+summary(male_hasdqtb_fit_best)
+#All coefficients are 0 
+```
