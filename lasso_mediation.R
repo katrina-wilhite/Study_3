@@ -68,7 +68,7 @@ for(i in 1:ncol(df_male_outcomes)) {
 #Modifty code for two-way interactions 
 for(i in 1:ncol(df_female_outcomes)) {
   outcome <- colnames(df_female_outcomes)[i]  
-  outcome_list <- assign(paste0("female_lasso_",outcome), list(female_exposure, female_lasso_mediators, df_female_outcomes[,i])) 
+  outcome_list <- assign(paste0("female_lasso_",outcome), list(female_exposure, female_lasso_mediators_two, df_female_outcomes[,i])) 
   names(outcome_list) <- c("exposure", "mediator", "outcome")
   x <- outcome_list$exposure
   y <- outcome_list$outcome
@@ -80,7 +80,7 @@ for(i in 1:ncol(df_female_outcomes)) {
 #Run loop to prefilter mediators and fit to model 
 for(i in 1:ncol(df_male_outcomes)) {
   outcome <- colnames(df_male_outcomes)[i]  
-  outcome_list <- assign(paste0("male_lasso_",outcome), list(male_exposure, male_lasso_mediators, df_male_outcomes[,i])) 
+  outcome_list <- assign(paste0("male_lasso_",outcome), list(male_exposure, male_lasso_mediators_two, df_male_outcomes[,i])) 
   names(outcome_list) <- c("exposure", "mediator", "outcome")
   x <- outcome_list$exposure
   y <- outcome_list$outcome
