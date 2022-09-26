@@ -3,6 +3,9 @@ library(regmed)
 library(dplyr)
 library(haven)
 
+male_data()
+female_data()
+
 munge_lasso <- function(sex) {
   if (sex == "male"){
     d = df_male_domsp_weekday
@@ -51,4 +54,7 @@ munge_lasso <- function(sex) {
   assign(paste0("df_", sex, "_outcomes"), envir = globalenv(), as.data.frame(df_outcomes))
   assign(paste0("df_", sex, "_lasso"), envir = globalenv(),df_lasso)
 }
+
+
+
 
