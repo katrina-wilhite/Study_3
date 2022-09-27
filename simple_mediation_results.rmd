@@ -1,130 +1,69 @@
-```{r, include=FALSE}
-options(tinytex.verbose = TRUE)
-```
-
 ```{r}
-#RQ: Does domain-specific movement behaviour profile membership mediate the relationship between socioeconomic position and socio-emotional outcomes in children?
-##Simple mediation for males
-```
-
-```{r include=FALSE}
 library(medflex)
-library(dplyr)
-library(haven)
-library(rmarkdown)
 ```
 
-```{r}
-load(file = "Z:/LSAC dataset/Study_2/Study_2/df_males_domsp_weekday.RData")
-lsac_wave6 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb10.sas7bdat")
-lsac_wave8 <- read_sas("Z:/LSAC dataset/General Release/Survey data/SAS/lsacgrb14.sas7bdat")
+
+```{r echo=FALSE}
+summary(male_effdecomp_prosocial)
+#No mediation for prosocialtiy
 ```
 
-```{r}
-# Select relevant columns from male dataset 
-relevant_male_data <- df_male_domsp_weekday %>%
-  select(hicid, model3_trajectory_assignments, Age, Remoteness, Indigenous, SEP)
-
-# Select relevant columns from LSAC wave 6 (SEIFA varialbes), parents living at home, parent mental health, parent ethnicity)
-wave_6_relevant_data <- lsac_wave6 %>%
-  select(hicid, fcnfsad2d, fcnfsda2d, fcnfser2d, fcnfseo2d, fmoth, ffath, fsc13a1i, zf09fm, zf09ff) 
-
-# Update column names to make sense
-colnames(wave_6_relevant_data)[2:10] <- c("adv", "dis", "resources", "education_occupation", "mother_home", "father_home", "mental_health", "mother_race", "father_race")
-
-# Select relevant columns from LSAC Wave 8 (SDQ results)
-wave_8_relevant_data <- lsac_wave8 %>%
-  select(hicid, hapsoc:hasdqtb) 
-
-# Update column names to make sense
-colnames(wave_8_relevant_data)[2:7] <- c("prosocial", "hyperactivity", "emotional", "peer", "conduct", "total")
-
-# Combine columns to make new dataset
-domsp_wave6 <- inner_join(relevant_male_data, wave_6_relevant_data, by = "hicid")
-df_males <- inner_join(domsp_wave6, wave_8_relevant_data, by = "hicid")
-``` 
-
-```{r}
-#Take out participants with missing covariate data 
-colSums(df_males < -8)
-# 2 mental health, 9 mother race, 125 father race
-#Reasons for "-9" coding: refusal of informant to participate or form partially completed; "-2" is a code for "Don't know" 
-#Code parents race as "Unknown"
-df_males <- df_males[!(df_males$mental_health == -9), ]
+```{r echo=FALSE}}
+summary(male_effdecomp_hyperactivity)
+#No mediation for hyperactivity 
 ```
 
-```{r}
-# Check dataframe for missing data reported as N/A
-colSums(is.na(df_males))
-# 11 participants are missing SDQ data - this accounts for <1% of data and this information is essential for data anlaysis - therefore these participants will be removed from the dataset
-df_males_na_removed <- na.omit(df_males)
+```{r echo=FALSE}}
+summary(male_effdecomp_emotional)
+#No mediation for emotional problems 
 ```
 
-```{r}
-#Recode mother  race to be "1 = Australian", "0 = not Australian" or "2 = Unknown" 
-df_males_na_removed[(df_males_na_removed$mother_race == 1101),]
-df_males_na_removed <- df_males_na_removed %>% 
-  mutate(mother_race=recode(mother_race, '1101' = '1', '-9' = '2')) 
-df_males_na_removed$mother_race[is.na(df_males_na_removed$mother_race)] <- 0
-df_males_na_removed$mother_race <- as.factor(df_males_na_removed$mother_race)
-#Repeat for mather
-df_males_na_removed <- df_males_na_removed %>% 
-  mutate(father_race=recode(father_race, '1101' = '1', '-9' = '2')) 
-df_males_na_removed$father_race[is.na(df_males_na_removed$father_race)] <- 0
-df_males_na_removed$father_race <- as.factor(df_males_na_removed$father_race)
-# Covert relevant columns to factors 
-factor_columns <- c("model3_trajectory_assignments", "Remoteness", "Indigenous", "adv", "dis", "resources", "education_occupation", "mother_home", "father_home", "mental_health")
-for (x in factor_columns) {
-  name <- colnames(df_males_na_removed[,x])
- df_males_na_removed[[name]] <- as.factor(df_males_na_removed[[name]])
-}
-
-#Scale all socio-emotional outcome variables 
-cols <- c("prosocial", "hyperactivity", "emotional", "peer", "conduct", "total")
-df_males_na_removed <- df_males_na_removed %>% 
-  mutate_at(c("prosocial", "hyperactivity", "emotional", "peer", "conduct", "total"), scale)
+```{r echo=FALSE}}
+summary(male_effdecomp_peer)
+#No mediation for peer problems 
 ```
 
-```{r}
-#Run loop for all socio-emotional variables 
-for (x in 16:ncol(df_males_na_removed)) {
-  name <- colnames(df_males_na_removed[,x])
-  assign("objectname", (paste(name,"~",("SEP + model3_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race"))))
-  expData <- assign(paste0("expData_", name), neImpute(objectname, data = df_males_na_removed))
-  assign("model", (paste(name,"~",("SEP0 + SEP1 + Remoteness + Indigenous + adv + dis + resources + education_occupation + mother_home + father_home + mental_health + mother_race + father_race"))))
-  outcome_results <- assign(paste0("ne_", name), neModel(model, expData = expData, se = "robust"))
-  assign(paste0("effdecomp_", name), neEffdecomp(outcome_results))
-  }
+```{r echo=FALSE}}
+summary(male_effdecomp_conduct)
+#No mediation for conduct problems
 ```
 
-```{r}
-#Check results for mediation 
-summary(effdecomp_prosocial)
-#No mediation with prosocial behaviour 
+```{r echo=FALSE}}
+summary(male_effdecomp_total)
+#No mediation for total strengths and difficulties 
 ```
 
-```{r}
-summary(effdecomp_hyperactivity)
-#No mediation with hyperactivity 
+```{r echo=FALSE}}
+summary(female_effdecomp_prosocial)
+#No mediation for prosocialtiy
 ```
 
-```{r}
-summary(effdecomp_emotional)
-#No mediation with emotional problems 
+```{r echo=FALSE}}
+summary(female_effdecomp_hyperactivity)
+#No mediation for hyperactivity 
 ```
 
-```{r}
-summary(effdecomp_peer)
-#No mediation with peer problems 
+```{r echo=FALSE}}
+summary(female_effdecomp_emotional)
+#No mediation for emotional problems 
 ```
 
-```{r}
-summary(effdecomp_conduct)
-#No mediation with conduct problems 
+```{r echo=FALSE}}
+summary(female_effdecomp_peer)
+#No mediation for peer problems 
 ```
 
-```{r}
-summary(effdecomp_total)
-#No mediation with total strengths and difficulties 
+```{r echo=FALSE}}
+summary(female_effdecomp_conduct)
+#No mediation for conduct problems
 ```
 
+```{r echo=FALSE}}
+summary(female_effdecomp_total)
+#No mediation for total strengths and difficulties 
+```
+
+
+
+
+ 
