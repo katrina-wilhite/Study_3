@@ -12,12 +12,40 @@ library(medflex)
 library(dplyr)
 library(haven)
 library(rmarkdown)
+
 ```
 
 ```{r}
 #Check results for mediation 
-summary(male_effdecomp_prosocial)
+summary(male_effdecomp_prosocial) -> results_male_prosocial
 #No mediation with prosocial behaviour 
+results_male_prosocial$coefficients[1,1]
+x <- broom::tidy(male_effdecomp_prosocial)
+results <- x[,c("contrast", "estimate", "std.error", "adj.p.value")]
+results$estimate <- paste0(round(estimate, digits = 2), " (", round(results$std.error, digits = 2), ")") 
+results <- results %>% 
+  rename_at('estimate', ~ 'Estimate (Standard Error)')
+results[,"std.error"] <- list(NULL)
+results$adj.p.value <- round(results$adj.p.value, digits = 2)
+results <- results %>% 
+  rename_at('adj.p.value', ~ 'p')
+results <- as.data.frame(results)
+
+
+
+estimate <- x$estimate %>% 
+  round(digits = 2)
+std.error <- x$std.error %>% 
+  round(digits = 2)
+p <- x$adj.p.value %>% 
+  round(digits = 2)
+results2 <- rbind(estimate, std.error, p) %>% 
+  as.data.frame()
+results2[,2]
+
+t(x)
+as.data.frame(y) -> y
+y[,1]
 ```
 
 ```{r}
