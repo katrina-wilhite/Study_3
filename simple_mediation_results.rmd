@@ -2,7 +2,7 @@
 library(dplyr)
 library(haven)
 library(rmarkdown)
-
+library(kableExtra)
 ```
 
 ```{r}
@@ -30,12 +30,37 @@ d <- as.data.frame(array)
 colnames(d) <- c("Estimate (SE)", "p","Estimate (SE)", "p","Estimate (SE)", "p")
 d$outcome <- as.character(x[["model"]][["terms"]][[2]]) 
 d <- d[ , c(7, 1:6)] 
-results_table <- rbind(results_table, d)
+.GlobalEnv$results_table <- rbind(results_table, d)
 }
 
+effdecomp_list <- list(male_effdecomp_prosocial, male_effdecomp_hyperactivity, male_effdecomp_emotional, male_effdecomp_peer, male_effdecomp_conduct, male_effdecomp_total, female_effdecomp_prosocial, female_effdecomp_hyperactivity, female_effdecomp_emotional, female_effdecomp_peer, female_effdecomp_conduct, female_effdecomp_total)
 
+#Run loop for males and then females - group by males and females in kable table 
+for (i in effdecomp_list) {
+effect_results(i)
+  }
 
 ```
+
+```{r}
+results_table %>% 
+    results_table[results_table == "0 (0)"] <- "<.01 (<.01)"
+results_table[results_table == "(0)"] <- "<.01)" 
+results_table$ <- gsub("\\(0\\)", "<.01", results_table)
+results_table$outcome <- tools::toTitleCase(results_table$outcome)
+results_table %>% 
+  mutate(`Estimate (SE).1` = stringr::str_replace(`Estimate (SE).1`, "(0)", "(<.01)"))
+```
+
+
+```{r}
+kbl(results_table) %>% 
+  kable_classic() %>% 
+  pack_rows("Males", 1,6) %>% 
+  pack_rows("Females", 7, 12) %>% 
+  add_header_above(c("", "Natural Direct Effect" = 2, "Natural Indirect Effect" = 2, "Total Effect" = 2))
+```
+
 
 ```{r}
 summary(male_effdecomp_hyperactivity)
