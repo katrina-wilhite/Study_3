@@ -30,8 +30,7 @@ results$adj.p.value <- round(results$adj.p.value, digits = 2)
 results <- results %>% 
   rename_at('adj.p.value', ~ 'p')
 results <- as.data.frame(results)
-
-
+#Perhaps try to add a row with the outcome name - overall goal is you want to make a function to extract the appropriate information from each outcome so you cna display the results to in a table 
 
 estimate <- x$estimate %>% 
   round(digits = 2)
