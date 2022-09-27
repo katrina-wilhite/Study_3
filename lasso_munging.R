@@ -28,6 +28,7 @@ munge_lasso <- function(sex) {
   mediator_matrix <- matrix(unlist(mediator_list), ncol = 13, byrow = FALSE) 
   colnames(mediator_matrix) <- c("v1_active_transport", "v2_naps", "v3_education", "v4_leisure_SB", "v5_passive_transport", "v6_screen_time", "v7_self_care", "v8_social", "v9_sports", "v10_unst_LPA", "v11_unst_MVPA", "v12_household", "v13_sleep")
   df_mediators <- as.data.frame(mediator_matrix)
+  df_mediators[df_mediators == 0] <- 0.1
   df_mediators <- scale(df_mediators) 
   ##Make interaction terms from mediator variables           
   for (x in 2:12){

@@ -1,69 +1,95 @@
 ```{r}
-library(medflex)
+library(dplyr)
+library(haven)
+library(rmarkdown)
+
 ```
 
+```{r}
+#Check results for mediation 
+summary(male_effdecomp_prosocial) -> results_male_prosocial
+#No mediation with prosocial behaviour 
+results_male_prosocial$coefficients[1,1]
+x <- broom::tidy(male_effdecomp_prosocial)
+results <- x[,c("contrast", "estimate", "std.error", "adj.p.value")]
+results$estimate <- paste0(round(estimate, digits = 2), " (", round(results$std.error, digits = 2), ")") 
+results <- results %>% 
+  rename_at('estimate', ~ 'Estimate (Standard Error)')
+results[,"std.error"] <- list(NULL)
+results$adj.p.value <- round(results$adj.p.value, digits = 2)
+results <- results %>% 
+  rename_at('adj.p.value', ~ 'p')
+results <- as.data.frame(results)
+#Perhaps try to add a row with the outcome name - overall goal is you want to make a function to extract the appropriate information from each outcome so you cna display the results to in a table 
 
-```{r echo=FALSE}
-summary(male_effdecomp_prosocial)
-#No mediation for prosocialtiy
+estimate <- x$estimate %>% 
+  round(digits = 2)
+std.error <- x$std.error %>% 
+  round(digits = 2)
+p <- x$adj.p.value %>% 
+  round(digits = 2)
+results2 <- rbind(estimate, std.error, p) %>% 
+  as.data.frame()
+results2[,2]
+
+t(x)
+as.data.frame(y) -> y
+y[,1]
 ```
 
-```{r echo=FALSE}}
+```{r}
 summary(male_effdecomp_hyperactivity)
-#No mediation for hyperactivity 
+#No mediation with hyperactivity 
 ```
 
-```{r echo=FALSE}}
+```{r}
 summary(male_effdecomp_emotional)
-#No mediation for emotional problems 
+#No mediation with emotional problems 
 ```
 
-```{r echo=FALSE}}
+```{r}
 summary(male_effdecomp_peer)
-#No mediation for peer problems 
+#No mediation with peer problems 
 ```
 
-```{r echo=FALSE}}
+```{r}
 summary(male_effdecomp_conduct)
-#No mediation for conduct problems
+#No mediation with conduct problems 
 ```
 
-```{r echo=FALSE}}
-summary(male_effdecomp_total)
-#No mediation for total strengths and difficulties 
-```
-
-```{r echo=FALSE}}
-summary(female_effdecomp_prosocial)
-#No mediation for prosocialtiy
-```
-
-```{r echo=FALSE}}
-summary(female_effdecomp_hyperactivity)
-#No mediation for hyperactivity 
-```
-
-```{r echo=FALSE}}
-summary(female_effdecomp_emotional)
-#No mediation for emotional problems 
-```
-
-```{r echo=FALSE}}
-summary(female_effdecomp_peer)
-#No mediation for peer problems 
-```
-
-```{r echo=FALSE}}
-summary(female_effdecomp_conduct)
-#No mediation for conduct problems
-```
-
-```{r echo=FALSE}}
+```{r}
 summary(female_effdecomp_total)
-#No mediation for total strengths and difficulties 
+#No mediation with total strengths and difficulties 
 ```
 
+```{r}
+#Check results for mediation 
+summary(female_effdecomp_prosocial)
+#No mediation with prosocial behaviour 
+```
 
+```{r}
+summary(female_effdecomp_hyperactivity)
+#No mediation with hyperactivity 
+```
 
+```{r}
+summary(female_effdecomp_emotional)
+#No mediation with emotional problems 
+```
 
- 
+```{r}
+summary(female_effdecomp_peer)
+#No mediation with peer problems 
+```
+
+```{r}
+summary(female_effdecomp_conduct)
+#No mediation with conduct problems 
+```
+
+```{r}
+summary(female_effdecomp_total)
+#No mediation with total strengths and difficulties 
+```
+
