@@ -32,7 +32,7 @@ munge_lasso_two_way_interactions <- function(sex) {
   ##Make interaction terms from mediator variables 
   two_way_interaction <- t(apply(df_mediators, 1, combn, 2, prod))
   colnames(two_way_interaction) <- paste(combn(1:13, 2, paste, collapse="V"), sep = "_")
-  assign(paste0(sex, "_lasso_mediators"), two_way_interaction)
+  assign(paste0(sex, "_lasso_mediators_two"), envir = globalenv(), two_way_interaction)
   #Prepare exposure variable 
   assign(paste0(sex, "_exposure"), envir = globalenv(), pull(df_lasso, SEP))
   #Select outcome variables 
