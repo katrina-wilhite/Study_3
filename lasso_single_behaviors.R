@@ -6,7 +6,7 @@ library(haven)
 male_data()
 female_data()
 
-munge_lasso <- function(sex) {
+munge_lasso_single <- function(sex) {
   if (sex == "male"){
     d = df_male_domsp_weekday
   }
@@ -30,7 +30,7 @@ munge_lasso <- function(sex) {
   df_mediators <- as.data.frame(mediator_matrix)
   df_mediators[df_mediators == 0] <- 0.1
   df_mediators <- scale(df_mediators)
-  assign(paste0(sex, "_lasso_mediators"), df_mediators)
+  assign(paste0(sex, "_lasso_mediators_single"), envir = globalenv(), df_mediators)
   
   #Prepare exposure variable 
   assign(paste0(sex, "_exposure"), envir = globalenv(), pull(df_lasso, SEP))
