@@ -100,6 +100,7 @@ male_hasdqtb_fit_best <- regmed.grid.bestfit(fit_male_hasdqtb)
 summary(male_hasdqtb_fit_best)
 #All coefficients are 0 
 ```
+
 ```{r}
 #Fit results for female prosocial behavior 
 plot.regmed.grid(fit_female_hapsoc_single)
@@ -147,6 +148,7 @@ female_hasdqtb_fit_best_single <- regmed.grid.bestfit(fit_female_hasdqtb_single)
 summary(female_hasdqtb_fit_best_single)
 #All coefficients are 0 
 ```
+
 ```{r}
 #Fit results for male prosocial behavior 
 plot.regmed.grid(fit_male_hapsoc_single)
@@ -243,6 +245,7 @@ female_hasdqtb_fit_best_two <- regmed.grid.bestfit(fit_female_hasdqtb_two)
 summary(female_hasdqtb_fit_best_two)
 #All coefficients are 0 
 ```
+
 ```{r}
 #Fit results for male prosocial behavior 
 plot.regmed.grid(fit_male_hapsoc_two)
