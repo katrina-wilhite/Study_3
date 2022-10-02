@@ -2,6 +2,7 @@
 library(regmed)
 library(dplyr)
 library(haven)
+library(igraph)
 source("./lasso_mediation.R")
 ```
 
@@ -11,8 +12,8 @@ plot.regmed.grid(fit_female_hapsoc)
 female_hapsoc_fit_best <- regmed.grid.bestfit(fit_female_hapsoc)
 summary(female_hapsoc_fit_best)
 #One non-zero coefficient 
-edges.med.f.hapsoc <- regmed.edges(female_hapsoc_fit_best, type = "mediators")
-plot.regmed.edges(edges.med.f.hapsoc)
+edges_med_f_hapsoc <- regmed.edges(female_hapsoc_fit_best, type = "mediators")
+plot.regmed.edges(edges_med_f_hapsoc)
 #Effect not large enough to mediate
 ```
 
@@ -30,8 +31,8 @@ plot.regmed.grid(fit_female_haemot)
 female_haemot_fit_best <- regmed.grid.bestfit(fit_female_haemot)
 summary(female_haemot_fit_best)
 #One non-zero coefficient 
-edges.med.f.haemot <- regmed.edges(female_haemot_fit_best, type = "mediators")
-plot.regmed.edges(edges.med.f.haemot)
+edges_med_f_haemot <- regmed.edges(female_haemot_fit_best, type = "mediators")
+plot.regmed.edges(edges_med_f_haemot)
 #Effect not large enough to mediate
 ```
 
@@ -80,8 +81,8 @@ plot.regmed.grid(fit_male_haemot)
 male_haemot_fit_best <- regmed.grid.bestfit(fit_male_haemot)
 summary(male_haemot_fit_best)
 #One non-zero coefficient 
-edges.med.m.haemot <- regmed.edges(male_haemot_fit_best, type = "mediators")
-plot.regmed.edges(edges.med.m.haemot)
+edges_med_m_haemot <- regmed.edges(male_haemot_fit_best, type = "mediators")
+plot.regmed.edges(edges_med_m_haemot)
 #Effect not large enough to mediate
 ```
 
@@ -115,9 +116,17 @@ plot.regmed.grid(fit_female_hapsoc_single)
 female_hapsoc_fit_best_single <- regmed.grid.bestfit(fit_female_hapsoc_single)
 summary(female_hapsoc_fit_best_single)
 #One non-zero coefficient 
-edges.med.f.hapsoc_single <- regmed.edges(female_hapsoc_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.f.hapsoc_single)
-#
+edges_med_f_hapsoc_single <- regmed.edges(female_hapsoc_fit_best_single, type = "mediators")
+
+replace(edges_med_f_hapsoc_single, 2, "Prosocial")
+edges_med_f_hapsoc_single$edges$coef <- round(edges_med_f_hapsoc_single$edges$coef, digits = 2)
+edges_med_f_hapsoc_single$edges$Vertex2[edges_med_f_hapsoc_single$edges$Vertex2 == 'y'] <- "Prosocial Behaviour"
+g <- graph_from_data_frame(edges_med_f_hapsoc_single$edges) %>% 
+  set_edge_attr("label", value = edges_med_f_hapsoc_single$edges$coef)
+plot.igraph(g, main = "Female Mediation")
+igraph_options(annotate.plot = FALSE)
+igraph_opt("main", default = TRUE)
+plot.regmed.edges(edges_med_f_hapsoc_single, main = "Female Mediation")
 ```
 
 ```{r}
@@ -126,8 +135,8 @@ plot.regmed.grid(fit_female_hahypr_single)
 female_hahypr_fit_best_single <- regmed.grid.bestfit(fit_female_hahypr_single)
 summary(female_hahypr_fit_best_single)
 #One non-zero coefficient 
-edges.med.f.hahypr_single <- regmed.edges(female_hahypr_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.f.hahypr_single)
+edges_med_f_hahypr_single <- regmed.edges(female_hahypr_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_f_hahypr_single)
 #Effect not large enough to be significant 
 ```
 
@@ -145,8 +154,8 @@ plot.regmed.grid(fit_female_hapeer_single)
 female_hapeer_fit_best_single <- regmed.grid.bestfit(fit_female_hapeer_single)
 summary(female_hapeer_fit_best_single)
 #One non-zero coefficient 
-edges.med.f.hapeer_single <- regmed.edges(female_hapeer_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.f.hapeer_single)
+edges_med_f_hapeer_single <- regmed.edges(female_hapeer_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_f_hapeer_single)
 #Effect not large enough to be significant 
 ```
 
@@ -156,8 +165,8 @@ plot.regmed.grid(fit_female_hacondb_single)
 female_hacondb_fit_best_single <- regmed.grid.bestfit(fit_female_hacondb_single)
 summary(female_hacondb_fit_best_single)
 #One non-zero coefficient 
-edges.med.f.hacondb_single <- regmed.edges(female_hacondb_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.f.hacondb_single)
+edges_med_f_hacondb_single <- regmed.edges(female_hacondb_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_f_hacondb_single)
 #
 ```
 
@@ -167,8 +176,8 @@ plot.regmed.grid(fit_female_hasdqtb_single)
 female_hasdqtb_fit_best_single <- regmed.grid.bestfit(fit_female_hasdqtb_single)
 summary(female_hasdqtb_fit_best_single)
 #One non-zero coefficient 
-edges.med.f.hasdqtb_single <- regmed.edges(female_hasdqtb_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.f.hasdqtb_single)
+edges_med_f_hasdqtb_single <- regmed.edges(female_hasdqtb_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_f_hasdqtb_single)
 ```
 
 ```{r}
@@ -193,8 +202,8 @@ plot.regmed.grid(fit_male_haemot_single)
 male_haemot_fit_best_single <- regmed.grid.bestfit(fit_male_haemot_single)
 summary(male_haemot_fit_best_single)
 #One non-zero coefficient 
-edges.med.m.haemot_single <- regmed.edges(male_haemot_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.m.haemot_single)
+edges_med_m_haemot_single <- regmed.edges(male_haemot_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_m_haemot_single)
 ```
 
 ```{r}
@@ -203,8 +212,8 @@ plot.regmed.grid(fit_male_hapeer_single)
 male_hapeer_fit_best_single <- regmed.grid.bestfit(fit_male_hapeer_single)
 summary(male_hapeer_fit_best_single)
 #One non-zero coefficient 
-edges.med.m.hapeer_single <- regmed.edges(male_hapeer_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.m.hapeer_single)
+edges_med_m_hapeer_single <- regmed.edges(male_hapeer_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_m_hapeer_single)
 #Effect not large enough to be significant 
 ```
 
@@ -214,8 +223,8 @@ plot.regmed.grid(fit_male_hacondb_single)
 male_hacondb_fit_best_single <- regmed.grid.bestfit(fit_male_hacondb_single)
 summary(male_hacondb_fit_best_single)
 #Two non-zero coefficient (education-based SB and screen time)
-edges.med.m.hacondb_single <- regmed.edges(male_hacondb_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.m.hacondb_single)
+edges_med_m_hacondb_single <- regmed.edges(male_hacondb_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_m_hacondb_single)
 #Effects not large enough to be significant 
 ```
 
@@ -225,8 +234,8 @@ plot.regmed.grid(fit_male_hasdqtb_single)
 male_hasdqtb_fit_best_single <- regmed.grid.bestfit(fit_male_hasdqtb_single)
 summary(male_hasdqtb_fit_best_single)
 #One non-zero coefficient 
-edges.med.m.hasdqtb_single <- regmed.edges(male_hasdqtb_fit_best_single, type = "mediators")
-plot.regmed.edges(edges.med.m.hasdqtb_single)
+edges_med_m_hasdqtb_single <- regmed.edges(male_hasdqtb_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_m_hasdqtb_single)
 ```
 
 ```{r}
