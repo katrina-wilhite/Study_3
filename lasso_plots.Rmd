@@ -3,8 +3,39 @@ title: "lasso_lots"
 output: html_document
 date: '2022-10-02'
 ---
+```{r include=FALSE}
+library(regmed)
+library(dplyr)
+library(haven)
+library(igraph)
+source("./lasso_mediation.R")
+```
 
-```{r}
+```{r include=FALSE}
+plot.regmed.grid(fit_female_hapsoc_single)
+female_hapsoc_fit_best_single <- regmed.grid.bestfit(fit_female_hapsoc_single)
+summary(female_hapsoc_fit_best_single)
+#One non-zero coefficient 
+edges_med_f_hapsoc_single <- regmed.edges(female_hapsoc_fit_best_single, type = "mediators")
+```
+
+```{r include=FALSE}
+plot.regmed.grid(fit_female_hacondb_single)
+female_hacondb_fit_best_single <- regmed.grid.bestfit(fit_female_hacondb_single)
+summary(female_hacondb_fit_best_single)
+#One non-zero coefficient 
+edges_med_f_hacondb_single <- regmed.edges(female_hacondb_fit_best_single, type = "mediators")
+```
+
+```{r include=FALSE}
+plot.regmed.grid(fit_female_hasdqtb_single)
+female_hasdqtb_fit_best_single <- regmed.grid.bestfit(fit_female_hasdqtb_single)
+summary(female_hasdqtb_fit_best_single)
+#One non-zero coefficient 
+edges_med_f_hasdqtb_single <- regmed.edges(female_hasdqtb_fit_best_single, type = "mediators")
+```
+
+```{r echo=FALSE}
 #Round and rename female prosocial behaviour 
 edges_med_f_hapsoc_single$edges$coef <- round(edges_med_f_hapsoc_single$edges$coef, digits = 2)
 edges_med_f_hapsoc_single$edges$Vertex2[edges_med_f_hapsoc_single$edges$Vertex2 == 'y'] <- "Prosocial Behaviour"
@@ -13,7 +44,7 @@ edges_med_f_hacondb_single$edges$coef <- round(edges_med_f_hacondb_single$edges$
 edges_med_f_hacondb_single$edges$Vertex2[edges_med_f_hacondb_single$edges$Vertex2 == 'y'] <- "Conduct Problems"
 #Round and rename female total 
 edges_med_f_hasdqtb_single$edges$coef <- round(edges_med_f_hasdqtb_single$edges$coef, digits = 2)
-edges_med_f_hasdqtb_single$edges$Vertex2[edges_med_f_hasdqtb_single$edges$Vertex2 == 'y'] <- "Total SDQ Score"
+edges_med_f_hasdqtb_single$edges$Vertex2[edges_med_f_hasdqtb_single$edges$Vertex2 == 'y'] <- "Total Strengths and Difficulties Questionnaire Score"
 #Combine outcomes into dataframe 
 female_mediation <- rbind(edges_med_f_hapsoc_single$edges, edges_med_f_hacondb_single$edges, edges_med_f_hasdqtb_single$edges)
 female_mediation[female_mediation == "x"] <- "Socioeconomic Position"
@@ -21,69 +52,42 @@ female_mediation[female_mediation == "v6_screen_time"] <- "Recreational Screen A
 #Plot
 gf <- graph_from_data_frame(female_mediation) %>% 
   set_edge_attr("label", value = female_mediation$coef)
-plot.igraph(gf, main = "Female Mediation", edge.color = "black") 
+plot.igraph(gf, main = "Female Mediation", edge.color = "black", vertex.color = "SkyBlue2", vertex.label.color = "black", edge.label.color = "black", edge.arrow.size = .25) 
+
+
+```
  
-
-```
-
-
-```{r}
-#Fit results for female prosocial behavior 
-plot.regmed.grid(fit_female_hapsoc_single)
-female_hapsoc_fit_best_single <- regmed.grid.bestfit(fit_female_hapsoc_single)
-summary(female_hapsoc_fit_best_single)
-#One non-zero coefficient 
-edges_med_f_hapsoc_single <- regmed.edges(female_hapsoc_fit_best_single, type = "mediators")
-
-replace(edges_med_f_hapsoc_single, 2, "Prosocial")
-edges_med_f_hapsoc_single$edges$coef <- round(edges_med_f_hapsoc_single$edges$coef, digits = 2)
-edges_med_f_hapsoc_single$edges$Vertex2[edges_med_f_hapsoc_single$edges$Vertex2 == 'y'] <- "Prosocial Behaviour"
-g <- graph_from_data_frame(edges_med_f_hapsoc_single$edges) %>% 
-  set_edge_attr("label", value = edges_med_f_hapsoc_single$edges$coef)
-plot.igraph(g, main = "Female Mediation")
-igraph_options(annotate.plot = FALSE)
-igraph_opt("main", default = TRUE)
-plot.regmed.edges(edges_med_f_hapsoc_single, main = "Female Mediation")
-```
-
-
-```{r}
-#Fit results for female conduct problems 
-plot.regmed.grid(fit_female_hacondb_single)
-female_hacondb_fit_best_single <- regmed.grid.bestfit(fit_female_hacondb_single)
-summary(female_hacondb_fit_best_single)
-#One non-zero coefficient 
-edges_med_f_hacondb_single <- regmed.edges(female_hacondb_fit_best_single, type = "mediators")
-plot.regmed.edges(edges_med_f_hacondb_single)
-#
-```
-
-```{r}
-#Fit results for female total SDQ score  
-plot.regmed.grid(fit_female_hasdqtb_single)
-female_hasdqtb_fit_best_single <- regmed.grid.bestfit(fit_female_hasdqtb_single)
-summary(female_hasdqtb_fit_best_single)
-#One non-zero coefficient 
-edges_med_f_hasdqtb_single <- regmed.edges(female_hasdqtb_fit_best_single, type = "mediators")
-plot.regmed.edges(edges_med_f_hasdqtb_single)
-```
-
-```{r}
-#Fit results for male emotional problems  
+```{r include=FALSE}
 plot.regmed.grid(fit_male_haemot_single)
 male_haemot_fit_best_single <- regmed.grid.bestfit(fit_male_haemot_single)
 summary(male_haemot_fit_best_single)
 #One non-zero coefficient 
 edges_med_m_haemot_single <- regmed.edges(male_haemot_fit_best_single, type = "mediators")
-plot.regmed.edges(edges_med_m_haemot_single)
-```
-
-```{r}
-#Fit results for male total SDQ score  
+``` 
+ 
+```{r include=FALSE}
 plot.regmed.grid(fit_male_hasdqtb_single)
 male_hasdqtb_fit_best_single <- regmed.grid.bestfit(fit_male_hasdqtb_single)
 summary(male_hasdqtb_fit_best_single)
 #One non-zero coefficient 
 edges_med_m_hasdqtb_single <- regmed.edges(male_hasdqtb_fit_best_single, type = "mediators")
-plot.regmed.edges(edges_med_m_hasdqtb_single)
+```
+
+```{r echo=FALSE}
+#Round and rename male emotional problems 
+edges_med_m_haemot_single$edges$coef <- round(edges_med_m_haemot_single$edges$coef, digits = 2)
+edges_med_m_haemot_single$edges$Vertex2[edges_med_m_haemot_single$edges$Vertex2 == 'y'] <- "Emotional Problems"
+#Round and rename male total SDQ
+edges_med_m_hasdqtb_single$edges$coef <- round(edges_med_m_hasdqtb_single$edges$coef, digits = 2)
+edges_med_m_hasdqtb_single$edges$Vertex2[edges_med_m_hasdqtb_single$edges$Vertex2 == 'y'] <- "Total Strengths and Difficulties Questionnaire Score"
+#Combine outcomes into dataframe 
+male_mediation <- rbind(edges_med_m_haemot_single$edges, edges_med_m_hasdqtb_single$edges)
+male_mediation[male_mediation == "x"] <- "Socioeconomic Position"
+male_mediation[male_mediation == "v6_screen_time"] <- "Recreational Screen Activities"
+#Plot
+gm <- graph_from_data_frame(male_mediation) %>% 
+  set_edge_attr("label", value = male_mediation$coef)
+plot.igraph(gm, main = "Male Mediation", edge.color = "black", vertex.color = "SkyBlue2", vertex.label.color = "black", edge.label.color = "black", edge.arrow.size = .25) 
+
+
 ```
