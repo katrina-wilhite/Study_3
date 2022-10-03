@@ -15,7 +15,51 @@ summary(female_hapsoc_fit_best)
 edges_med_f_hapsoc <- regmed.edges(female_hapsoc_fit_best, type = "mediators")
 plot.regmed.edges(edges_med_f_hapsoc)
 #Effect not large enough to mediate
+
 ```
+
+```{r}
+model_selection_table <- data.frame(matrix(ncol = 3, nrow= 0))
+colnames(model_selection_table) <- c("bic", "lambda")
+
+
+
+model_selection <- function(x) { 
+  model <- x$grid.data %>%
+    select(lambda, bic) %>% 
+    slice_min(n = 1, bic) %>% 
+    select(order(colnames(.)))
+  .GlobalEnv$model_selection_table <- rbind(model_selection_table, model)
+}
+
+model_selection_list <- list(male_hapsoc_single = fit_male_hapsoc_single, male_hahypr_single = fit_male_hahypr_single, male_haemot_single = fit_male_haemot_single, male_hapeer_single = fit_male_hapeer_single, male_hacondb_single = fit_male_hacondb_single, male_hasdqtb_single = fit_male_hasdqtb_single, male_hapsoc =fit_male_hapsoc, male_hahypr = fit_male_hahypr, male_haemot = fit_male_haemot, male_hapeer = fit_male_hapeer, male_hacondb = fit_male_hacondb, male_hasdqtb = fit_male_hasdqtb, female_hapsoc_single = fit_female_hapsoc_single, female_hahypr_single = fit_female_hahypr_single, female_haemot_single = fit_female_haemot_single, female_hapeer_single = fit_female_hapeer_single, female_hacondb_single = fit_female_hacondb_single, female_hasdqtb_single = fit_female_hasdqtb_single, female_hapsoc =fit_female_hapsoc, female_hahypr = fit_female_hahypr, female_haemot = fit_female_haemot, female_hapeer = fit_female_hapeer, female_hacondb = fit_female_hacondb, female_hasdqtb = fit_female_hasdqtb)
+
+model_selection_list_names <- names(model_selection_list)
+
+#Run loop for males and then females - group by males and females in kable table 
+for (i in model_selection_list) {
+  model_selection(i)
+}
+
+for(i in model_selection_list) {
+  model_selection(i)
+  }
+
+model_selection_table
+row.names(model_selection_table) <- model_selection_list_names
+```
+
+```{r}
+model_selection_table %>% 
+  kbl(caption = "Table 3. Lasso Model Selection") %>% 
+  kable_classic(html_font = "Arial") %>% 
+  pack_rows("Males", 1,6) %>% 
+  pack_rows("Females", 7, 12) %>% 
+  add_header_above(c("", "Natural Direct Effect" = 2, "Natural Indirect Effect" = 2, "Total Effect" = 2)) %>% 
+  footnote(general = "Socio-Emotional Outcomes are based on scores from the Strengths and Difficulties Questionnaire. SE = Standard Error")
+```
+
+
 
 ```{r}
 #Fit results for female hyperactivity 
