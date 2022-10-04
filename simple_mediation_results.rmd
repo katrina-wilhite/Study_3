@@ -1,17 +1,23 @@
-```{r}
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r include=FALSE}
 library(dplyr)
 library(haven)
 library(rmarkdown)
+library(knitr)
 library(kableExtra)
 library(stringr)
+source("./load_data_by_sex.R")
+source("./munging.R")
+source("./simple_mediation.R")
 ```
 
-```{r}
+```{r include=FALSE}
 #Check results for mediation 
-summary(male_effdecomp_prosocial) 
-#No mediation with prosocial behaviour 
-results_male_prosocial$coefficients[1,1]
-
+#No mediation with prosocial behaviours
 results_table <- data.frame(matrix(ncol = 7, nrow=0))
 colnames(results_table) <- c("Socio-emotional outcome", "Estimate (SE)", "p", "Estimate (SE)", "p", "Estimate (SE)", "p")
 
@@ -43,7 +49,7 @@ effect_results(i)
 
 ```
 
-```{r}
+```{r include=FALSE}
 results_table[results_table == "0 (0)"] <- "<.01 (<.01)"
 results_table[results_table == "(0)"] <- "<.01)" 
 results_table$outcome <- tools::toTitleCase(results_table$outcome)
@@ -69,7 +75,7 @@ names(results_table)[names(results_table)=="outcome"] <- "Socio-Emotional Outcom
 ```
 
 
-```{r}
+```{r echo=FALSE}
 results_table %>% 
   kbl(caption = "Table 3. Mediation Effects of Movement Behaviour Trajectories and Socio-Emotional Outcomes") %>% 
   kable_classic(html_font = "Arial") %>% 
@@ -79,60 +85,4 @@ results_table %>%
   footnote(general = "Socio-Emotional Outcomes are based on scores from the Strengths and Difficulties Questionnaire. SE = Standard Error")
 ```
 
-
-```{r}
-summary(male_effdecomp_hyperactivity)
-#No mediation with hyperactivity 
-```
-
-```{r}
-summary(male_effdecomp_emotional)
-#No mediation with emotional problems 
-```
-
-```{r}
-summary(male_effdecomp_peer)
-#No mediation with peer problems 
-```
-
-```{r}
-summary(male_effdecomp_conduct)
-#No mediation with conduct problems 
-```
-
-```{r}
-summary(female_effdecomp_total)
-#No mediation with total strengths and difficulties 
-```
-
-```{r}
-#Check results for mediation 
-summary(female_effdecomp_prosocial)
-#No mediation with prosocial behaviour 
-```
-
-```{r}
-summary(female_effdecomp_hyperactivity)
-#No mediation with hyperactivity 
-```
-
-```{r}
-summary(female_effdecomp_emotional)
-#No mediation with emotional problems 
-```
-
-```{r}
-summary(female_effdecomp_peer)
-#No mediation with peer problems 
-```
-
-```{r}
-summary(female_effdecomp_conduct)
-#No mediation with conduct problems 
-```
-
-```{r}
-summary(female_effdecomp_total)
-#No mediation with total strengths and difficulties 
-```
 
