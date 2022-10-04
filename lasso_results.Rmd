@@ -5,8 +5,13 @@ library(haven)
 library(igraph)
 library(kableExtra)
 library(stringr)
-source("./lasso_mediation.R")
+#source("./lasso_mediation.R")
 ```
+
+```{r include=FALSE}
+load("./Mediation_Data.rdata")
+```
+
 
 ```{r include=FALSE}
 #Fit results for female prosocial behavior 
@@ -15,7 +20,7 @@ female_hapsoc_fit_best <- regmed.grid.bestfit(fit_female_hapsoc)
 summary(female_hapsoc_fit_best)
 #One non-zero coefficient 
 edges_med_f_hapsoc <- regmed.edges(female_hapsoc_fit_best, type = "mediators")
-plot.regmed.edges(edges_med_f_hapsoc)
+#plot.regmed.edges(edges_med_f_hapsoc)
 #Effect not large enough to mediate
 
 ```
@@ -37,7 +42,7 @@ female_haemot_fit_best <- regmed.grid.bestfit(fit_female_haemot)
 summary(female_haemot_fit_best)
 #One non-zero coefficient 
 edges_med_f_haemot <- regmed.edges(female_haemot_fit_best, type = "mediators")
-plot.regmed.edges(edges_med_f_haemot)
+#plot.regmed.edges(edges_med_f_haemot)
 #Effect not large enough to mediate
 ```
 
@@ -64,6 +69,7 @@ female_hasdqtb_fit_best <- regmed.grid.bestfit(fit_female_hasdqtb)
 summary(female_hasdqtb_fit_best)
 #All coefficients are 0 
 ```
+
 ```{r include=FALSE}
 #Fit results for male prosocial behavior 
 plot.regmed.grid(fit_male_hapsoc)
@@ -87,7 +93,7 @@ male_haemot_fit_best <- regmed.grid.bestfit(fit_male_haemot)
 summary(male_haemot_fit_best)
 #One non-zero coefficient 
 edges_med_m_haemot <- regmed.edges(male_haemot_fit_best, type = "mediators")
-plot.regmed.edges(edges_med_m_haemot)
+#plot.regmed.edges(edges_med_m_haemot)
 #Effect not large enough to mediate
 ```
 
@@ -141,7 +147,7 @@ female_hahypr_fit_best_single <- regmed.grid.bestfit(fit_female_hahypr_single)
 summary(female_hahypr_fit_best_single)
 #One non-zero coefficient 
 edges_med_f_hahypr_single <- regmed.edges(female_hahypr_fit_best_single, type = "mediators")
-plot.regmed.edges(edges_med_f_hahypr_single)
+#plot.regmed.edges(edges_med_f_hahypr_single)
 #Effect not large enough to be significant 
 ```
 
@@ -160,7 +166,7 @@ female_hapeer_fit_best_single <- regmed.grid.bestfit(fit_female_hapeer_single)
 summary(female_hapeer_fit_best_single)
 #One non-zero coefficient 
 edges_med_f_hapeer_single <- regmed.edges(female_hapeer_fit_best_single, type = "mediators")
-plot.regmed.edges(edges_med_f_hapeer_single)
+#plot.regmed.edges(edges_med_f_hapeer_single)
 #Effect not large enough to be significant 
 ```
 
@@ -218,7 +224,7 @@ male_hapeer_fit_best_single <- regmed.grid.bestfit(fit_male_hapeer_single)
 summary(male_hapeer_fit_best_single)
 #One non-zero coefficient 
 edges_med_m_hapeer_single <- regmed.edges(male_hapeer_fit_best_single, type = "mediators")
-plot.regmed.edges(edges_med_m_hapeer_single)
+#plot.regmed.edges(edges_med_m_hapeer_single)
 #Effect not large enough to be significant 
 ```
 
@@ -229,7 +235,7 @@ male_hacondb_fit_best_single <- regmed.grid.bestfit(fit_male_hacondb_single)
 summary(male_hacondb_fit_best_single)
 #Two non-zero coefficient (education-based SB and screen time)
 edges_med_m_hacondb_single <- regmed.edges(male_hacondb_fit_best_single, type = "mediators")
-plot.regmed.edges(edges_med_m_hacondb_single)
+#plot.regmed.edges(edges_med_m_hacondb_single)
 #Effects not large enough to be significant 
 ```
 
@@ -364,37 +370,35 @@ for (i in model_selection_list) {
 }
 
 model_selection_table
-model_selection_table$outcomes <- model_selection_list_names
+model_selection_table$outcome_label <- model_selection_list_names
 model_selection_table <- model_selection_table %>% 
-  select(outcomes, everything())
+  select(outcome_label, everything())
 ```
 
 ```{r include=FALSE}
-model_selection_table$outcomes <- stringr::str_remove(model_selection_table$outcomes, "female_")
-model_selection_table$outcomes <- stringr::str_remove(model_selection_table$outcomes, "male_")
-model_selection_table$outcomes <- stringr::str_remove(model_selection_table$outcomes, "_single")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "female_")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "male_")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "_single")
 
 model_selection_table <- model_selection_table %>% 
-  mutate(outcomes = str_replace(outcomes, "hapsoc", "Prosocial Behaviour")) %>% 
-  mutate(outcomes = str_replace(outcomes, "hahypr", "Hyperactivity-Inattentiveness")) %>% 
-  mutate(outcomes = str_replace(outcomes, "haemot", "Emotional Problems ")) %>% 
-  mutate(outcomes = str_replace(outcomes, "hapeer", "Peer Problems")) %>% 
-  mutate(outcomes = str_replace(outcomes, "hacondb", "Conduct Problems")) %>% 
-  mutate(outcomes = str_replace(outcomes, "hasdqtb", "Total Score")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hapsoc", "Prosocial Behaviour")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hahypr", "Hyperactivity-Inattentiveness")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "haemot", "Emotional Problems ")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hapeer", "Peer Problems")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hacondb", "Conduct Problems")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hasdqtb", "Total Score"))
   
-model_selection_table <- dplyr::rename(model_selection_table, 'Socio-Emotional Outcomes'=outcomes) 
+model_selection_table <- dplyr::rename(model_selection_table, 'Socio-Emotional Outcomes'=outcome_label) 
   
 ```
 
 ```{r echo=FALSE}
 model_selection_table %>% 
-  kbl(caption = "Table 3. Lasso Model Selection") %>% 
+  kbl(caption = "Supplementary Table 1. Lasso Model Selection") %>% 
   kable_classic(html_font = "Arial") %>% 
-  pack_rows("Males", 1,12) %>% 
-  pack_rows("Females", 13, 24) %>% 
-  pack_rows("Single Movement Behaviours", 1,6) %>% 
-  pack_rows("Combinations of Movement Behaviours", 7, 12) %>%
-  pack_rows("Single Movement Behaviours", 13,18) %>% 
-  pack_rows("Combinations of Movement Behaviours", 19, 24) %>% 
+  pack_rows("Males (Single Movement Behaviours)", 1,6) %>% 
+  pack_rows("Males (Combinations of Movement Behaviours)", 7, 12) %>% 
+  pack_rows("Females (Single Movement Behaviours)", 13, 18) %>% 
+  pack_rows("Females (Combinations of Movement Behaviours)", 19, 24) %>% 
   footnote(general = "Socio-Emotional Outcomes are based on scores from the Strengths and Difficulties Questionnaire.")
 ```
