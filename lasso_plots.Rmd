@@ -1,5 +1,5 @@
 ---
-title: "lasso_lots"
+title: "lasso_plots"
 output: html_document
 date: '2022-10-02'
 ---
@@ -8,7 +8,10 @@ library(regmed)
 library(dplyr)
 library(haven)
 library(igraph)
-source("./lasso_mediation.R")
+```
+
+```{r include=FALSE}
+load("./Mediation_Data.rdata")
 ```
 
 ```{r include=FALSE}
