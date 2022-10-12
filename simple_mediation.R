@@ -33,6 +33,9 @@ for (x in 16:ncol(df_female)) {
   assign(paste0("female_effdecomp_", name), envir = globalenv(), neEffdecomp(outcome_results))
 }
 
+#See RMD file "simple_mediation_results.rmd" for summaries of all effdecomp objects 
+
+
 
 #I tried to make a function but I couldn't get it to work! I couldn't figure it out but it kept returning erros out on the last line. No clue why.  
 # simple_mediation <- function(sex) {
