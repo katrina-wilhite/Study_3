@@ -50,15 +50,12 @@ effect_results(i)
 ```
 
 ```{r include=FALSE}
-results_table[results_table == "0 (0)"] <- "<.01 (<.01)"
-results_table[results_table == "(0)"] <- "<.01)" 
+results_table$p[results_table$p == "0.00"] <- "<.01"
+results_table$p[results_table$p == "0.0"] <- "<.01"
+results_table$p.2[results_table$p.2 == "0.00"] <- "<.01"
+results_table$p.2[results_table$p.2 == "0.0"] <- "<.01"
 results_table$outcome <- tools::toTitleCase(results_table$outcome)
 results_table <- results_table %>% 
-  mutate_all(funs(str_replace(.,"\\(0\\)", "(<.01)"))) %>% 
-  mutate_all(funs(str_replace(.,"0.0 ", "<.01 "))) %>% 
-  mutate_all(funs(str_replace(.,"0.0$", "<.01"))) %>% 
-  mutate_all(funs(str_replace(.,"^0 ", "<.01 "))) %>% 
-  mutate_all(funs(str_replace(.,"0.00", "<.01"))) %>% 
   mutate(outcome = str_replace(outcome, "Prosocial", "Prosocial Behaviour")) %>% 
   mutate(outcome = str_replace(outcome, "Hyperactivity", "Hyperactivity-Inattentiveness")) %>% 
   mutate(outcome = str_replace(outcome, "Emotional", "Emotional Problems ")) %>% 
