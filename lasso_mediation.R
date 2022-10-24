@@ -97,6 +97,35 @@ for(i in 1:ncol(df_male_outcomes)) {
 
 save.image("./Mediation_Data.rdata")
 
+
+#Run analysis for gernal movement behavour interactions
+munge_lasso_general_interactions("female")
+munge_lasso_general_interactions("male")
+#Modify code for single domain-specific mediators 
+for(i in 1:ncol(df_female_outcomes)) {
+  outcome <- colnames(df_female_outcomes)[i]  
+  outcome_list <- assign(paste0("female_lasso_",outcome), list(female_exposure, female_lasso_mediators_general_interactions, df_female_outcomes[,i])) 
+  names(outcome_list) <- c("exposure", "mediator", "outcome")
+  x <- outcome_list$exposure
+  y <- outcome_list$outcome
+  med <- outcome_list$mediator
+  assign(paste0("fit_female_", outcome, "_general_interactions"), regmed.grid(x, med, y, lambda_grid, frac.lasso = 0.8)) 
+}
+
+
+
+for(i in 1:ncol(df_male_outcomes)) {
+  outcome <- colnames(df_male_outcomes)[i]  
+  outcome_list <- assign(paste0("male_lasso_",outcome), list(male_exposure, male_lasso_mediators_general_interactions, df_male_outcomes[,i])) 
+  names(outcome_list) <- c("exposure", "mediator", "outcome")
+  x <- outcome_list$exposure
+  y <- outcome_list$outcome
+  med <- outcome_list$mediator
+  assign(paste0("fit_male_", outcome, "_general_interactions"), regmed.grid(x, med, y, lambda_grid, frac.lasso = 0.8)) 
+}
+
+save.image("./Mediation_Data.rdata")
+
 # munge_lasso_two_way_interactions("female")
 # munge_lasso_two_way_interactions("male")
 # #Modifty code for two-way interactions 
