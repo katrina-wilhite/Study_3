@@ -1,8 +1,4 @@
----
-output:
-  word_document: default
-  html_document: default
----
+
 ```{r include=FALSE}
 library(regmed)
 library(dplyr)
@@ -134,15 +130,6 @@ summary(female_hapsoc_fit_best_single)
 #One non-zero coefficient 
 edges_med_f_hapsoc_single <- regmed.edges(female_hapsoc_fit_best_single, type = "mediators")
 
-replace(edges_med_f_hapsoc_single, 2, "Prosocial")
-edges_med_f_hapsoc_single$edges$coef <- round(edges_med_f_hapsoc_single$edges$coef, digits = 2)
-edges_med_f_hapsoc_single$edges$Vertex2[edges_med_f_hapsoc_single$edges$Vertex2 == 'y'] <- "Prosocial Behaviour"
-g <- graph_from_data_frame(edges_med_f_hapsoc_single$edges) %>% 
-  set_edge_attr("label", value = edges_med_f_hapsoc_single$edges$coef)
-plot.igraph(g, main = "Female Mediation")
-igraph_options(annotate.plot = FALSE)
-igraph_opt("main", default = TRUE)
-plot.regmed.edges(edges_med_f_hapsoc_single, main = "Female Mediation")
 ```
 
 ```{r include=FALSE}
@@ -608,6 +595,7 @@ model_selection_table <- model_selection_table %>%
   mutate(outcome_label = str_replace(outcome_label, "hasdqtb", "Total Score"))
   
 model_selection_table <- dplyr::rename(model_selection_table, 'Socio-Emotional Outcomes'=outcome_label) 
+rownames(model_selection_table) <- NULL
   
 ```
 
