@@ -457,6 +457,110 @@ summary(female_hasdqtb_fit_best_general)
 #All coefficients are 0 
 ```
 
+
+
+
+```{r include=FALSE}
+#Fit results for male prosocial behavior 
+plot.regmed.grid(fit_male_hapsoc_general_interactions)
+male_hapsoc_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hapsoc_general_interactions)
+summary(male_hapsoc_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male hyperactivity 
+plot.regmed.grid(fit_male_hahypr_general_interactions)
+male_hahypr_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hahypr_general_interactions)
+summary(male_hahypr_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male emotional problems  
+plot.regmed.grid(fit_male_haemot_general_interactions)
+male_haemot_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_haemot_general_interactions)
+summary(male_haemot_fit_best_general_interactions)
+
+#All other coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male peer problems  
+plot.regmed.grid(fit_male_hapeer_general_interactions)
+male_hapeer_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hapeer_general_interactions)
+summary(male_hapeer_fit_best_general_interactions)
+#All coefficients are 0
+```
+
+```{r include=FALSE}
+#Fit results for male conduct problems 
+plot.regmed.grid(fit_male_hacondb_general_interactions)
+male_hacondb_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hacondb_general_interactions)
+summary(male_hacondb_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male total SDQ score  
+plot.regmed.grid(fit_male_hasdqtb_general_interactions)
+male_hasdqtb_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hasdqtb_general_interactions)
+summary(male_hasdqtb_fit_best_general_interactions)
+#All coefficients are 0
+```
+
+
+
+```{r include=FALSE}
+#Fit results for female prosocial behavior 
+plot.regmed.grid(fit_female_hapsoc_general_interactions)
+female_hapsoc_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hapsoc_general_interactions)
+summary(female_hapsoc_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female hyperactivity 
+plot.regmed.grid(fit_female_hahypr_general_interactions)
+female_hahypr_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hahypr_general_interactions)
+summary(female_hahypr_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female emotional problems  
+plot.regmed.grid(fit_female_haemot_general_interactions)
+female_haemot_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_haemot_general_interactions)
+summary(female_haemot_fit_best_general_interactions)
+#All other coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female peer problems  
+plot.regmed.grid(fit_female_hapeer_general_interactions)
+female_hapeer_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hapeer_general_interactions)
+summary(female_hapeer_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female conduct problems 
+plot.regmed.grid(fit_female_hacondb_general_interactions)
+female_hacondb_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hacondb_general_interactions)
+summary(female_hacondb_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female total SDQ score  
+plot.regmed.grid(fit_female_hasdqtb_general_interactions)
+female_hasdqtb_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hasdqtb_general_interactions)
+summary(female_hasdqtb_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+
+
 ```{r include=FALSE}
 model_selection_table <- data.frame(matrix(ncol = 3, nrow= 0))
 colnames(model_selection_table) <- c("bic", "lambda")
@@ -471,7 +575,8 @@ model_selection <- function(x) {
   .GlobalEnv$model_selection_table <- rbind(model_selection_table, model)
 }
 
-model_selection_list <- list(male_hapsoc_single = fit_male_hapsoc_single, male_hahypr_single = fit_male_hahypr_single, male_haemot_single = fit_male_haemot_single, male_hapeer_single = fit_male_hapeer_single, male_hacondb_single = fit_male_hacondb_single, male_hasdqtb_single = fit_male_hasdqtb_single, male_hapsoc =fit_male_hapsoc, male_hahypr = fit_male_hahypr, male_haemot = fit_male_haemot, male_hapeer = fit_male_hapeer, male_hacondb = fit_male_hacondb, male_hasdqtb = fit_male_hasdqtb, female_hapsoc_single = fit_female_hapsoc_single, female_hahypr_single = fit_female_hahypr_single, female_haemot_single = fit_female_haemot_single, female_hapeer_single = fit_female_hapeer_single, female_hacondb_single = fit_female_hacondb_single, female_hasdqtb_single = fit_female_hasdqtb_single, female_hapsoc =fit_female_hapsoc, female_hahypr = fit_female_hahypr, female_haemot = fit_female_haemot, female_hapeer = fit_female_hapeer, female_hacondb = fit_female_hacondb, female_hasdqtb = fit_female_hasdqtb)
+model_selection_list <- list(male_hapsoc_general = fit_male_hapsoc_general, male_hahypr_general = fit_male_hahypr_general, male_haemot_general = fit_male_haemot_general, male_hapeer_general = fit_male_hapeer_general, male_hacondb_general = fit_male_hacondb_general, male_hasdqtb_general = fit_male_hasdqtb_general, male_hapsoc_general_interactions =fit_male_hapsoc_general_interactions, male_hahypr_general_interactions = fit_male_hahypr_general_interactions, male_haemot_general_interactions = fit_male_haemot_general_interactions, male_hapeer_general_interactions = fit_male_hapeer_general_interactions, male_hacondb_general_interactions = fit_male_hacondb_general_interactions, male_hasdqtb_general_interactions = fit_male_hasdqtb_general_interactions, female_hapsoc_general = fit_female_hapsoc_general, female_hahypr_general = fit_female_hahypr_general, female_haemot_general = fit_female_haemot_general, female_hapeer_general = fit_female_hapeer_general, female_hacondb_general = fit_female_hacondb_general, female_hasdqtb_general = fit_female_hasdqtb_general, female_hapsoc_general_interactions =fit_female_hapsoc_general_interactions, female_hahypr_general_interactions = fit_female_hahypr_general_interactions, female_haemot_general_interactions = fit_female_haemot_general_interactions, female_hapeer_general_interactions = fit_female_hapeer_general_interactions, female_hacondb_general_interactions = fit_female_hacondb_general_interactions, female_hasdqtb_general_interactions = fit_female_hasdqtb_general_interactions, male_hapsoc_single = fit_male_hapsoc_single, male_hahypr_single = fit_male_hahypr_single, male_haemot_single = fit_male_haemot_single, male_hapeer_single = fit_male_hapeer_single, male_hacondb_single = fit_male_hacondb_single, male_hasdqtb_single = fit_male_hasdqtb_single, male_hapsoc =fit_male_hapsoc, male_hahypr = fit_male_hahypr, male_haemot = fit_male_haemot, male_hapeer = fit_male_hapeer, male_hacondb = fit_male_hacondb, male_hasdqtb = fit_male_hasdqtb, female_hapsoc_single = fit_female_hapsoc_single, female_hahypr_single = fit_female_hahypr_single, female_haemot_single = fit_female_haemot_single, female_hapeer_single = fit_female_hapeer_single, female_hacondb_single = fit_female_hacondb_single, female_hasdqtb_single = fit_female_hasdqtb_single, female_hapsoc =fit_female_hapsoc, female_hahypr = fit_female_hahypr, female_haemot = fit_female_haemot, female_hapeer = fit_female_hapeer, female_hacondb = fit_female_hacondb, female_hasdqtb = fit_female_hasdqtb)
+
 
 model_selection_list_names <- names(model_selection_list)
 
@@ -481,6 +586,7 @@ for (i in model_selection_list) {
 }
 
 model_selection_table
+model_selection_table <- model_selection_table[-c(7:8),]
 model_selection_table$outcome_label <- model_selection_list_names
 model_selection_table <- model_selection_table %>% 
   select(outcome_label, everything())
@@ -490,6 +596,8 @@ model_selection_table <- model_selection_table %>%
 model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "female_")
 model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "male_")
 model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "_single")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "_interactions")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "_general")
 
 model_selection_table <- model_selection_table %>% 
   mutate(outcome_label = str_replace(outcome_label, "hapsoc", "Prosocial Behaviour")) %>% 
@@ -505,11 +613,15 @@ model_selection_table <- dplyr::rename(model_selection_table, 'Socio-Emotional O
 
 ```{r echo=FALSE}
 model_selection_table %>% 
-  kbl(caption = "Supplementary Table 1. Lasso Model Selection") %>% 
+  kbl(caption = "Appendix D.1 Lasso Model Selection") %>% 
   kable_classic(html_font = "Arial") %>% 
-  pack_rows("Males (Single Movement Behaviours)", 1,6) %>% 
-  pack_rows("Males (Combinations of Movement Behaviours)", 7, 12) %>% 
-  pack_rows("Females (Single Movement Behaviours)", 13, 18) %>% 
-  pack_rows("Females (Combinations of Movement Behaviours)", 19, 24) %>% 
+  pack_rows("Males (Single General Movement Behaviours)", 1,6) %>% 
+  pack_rows("Males (Combinations of General Movement Behaviours)", 7, 12) %>% 
+  pack_rows("Females (Single General Movement Behaviours)", 13, 18) %>% 
+  pack_rows("Females (Combinations of General Movement Behaviours)", 19, 24) %>% 
+  pack_rows("Males (Single Domain-Specific Movement Behaviours)", 25,30) %>% 
+  pack_rows("Males (Combinations of Domain-Specific Movement Behaviours)", 31, 36) %>% 
+  pack_rows("Females (Single Domain-Specific Movement Behaviours)", 37, 42) %>% 
+  pack_rows("Females (Combinations of Domain-Specific Movement Behaviours)", 43, 48) %>% 
   footnote(general = "Socio-Emotional Outcomes are based on scores from the Strengths and Difficulties Questionnaire.")
 ```
