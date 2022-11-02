@@ -80,7 +80,7 @@ names(results_table)[names(results_table)=="outcome"] <- "Socio-emotional outcom
 
 ```{r echo=FALSE}
 results_table %>% 
-  kbl(caption = "Table 3. Mediation Effects of Movement Behaviour Trajectories and Socio-Emotional Outcomes") %>% 
+  kbl(caption = "Table 4.3 Mediation Effects of Movement Behaviour Trajectories and Socio-Emotional Outcomes") %>% 
   kable_classic(html_font = "Arial") %>% 
   pack_rows("Males", 1,6) %>% 
   pack_rows("Females", 7, 12) %>% 
