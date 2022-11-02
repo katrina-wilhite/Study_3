@@ -52,21 +52,27 @@ effect_results(i)
 ```{r include=FALSE}
 results_table$p[results_table$p == "0.00"] <- "<.01"
 results_table$p[results_table$p == "0.0"] <- "<.01"
+results_table$`Estimate (SE)`[results_table$`Estimate (SE)` == "-0.1 (0.04)"] <- "-0.10 (0.04)"
+results_table$p.1[results_table$p.1 == "0.4"] <- "0.40"
 results_table$p.2[results_table$p.2 == "0.00"] <- "<.01"
 results_table$p.2[results_table$p.2 == "0.0"] <- "<.01"
+results_table$`Estimate (SE).1`[results_table$`Estimate (SE).1`== "0 (0)"] <- "0.00 (0.00)"
+results_table$`Estimate (SE).1`[results_table$`Estimate (SE).1`== "0.01 (0)"] <- "0.01 (0.00)"
+results_table$`Estimate (SE).1`[results_table$`Estimate (SE).1`== "-0.01 (0)"] <- "-0.01 (0.00)"
+results_table$`Estimate (SE).2`[results_table$`Estimate (SE).2` == "0 (0.04)"] <- "0.00 (0.04)"
 results_table$outcome <- tools::toTitleCase(results_table$outcome)
 results_table <- results_table %>% 
-  mutate(outcome = str_replace(outcome, "Prosocial", "Prosocial Behaviour")) %>% 
-  mutate(outcome = str_replace(outcome, "Hyperactivity", "Hyperactivity-Inattentiveness")) %>% 
-  mutate(outcome = str_replace(outcome, "Emotional", "Emotional Problems ")) %>% 
-  mutate(outcome = str_replace(outcome, "Peer", "Peer Problems")) %>% 
-  mutate(outcome = str_replace(outcome, "Conduct", "Conduct Problems"))
+  mutate(outcome = str_replace(outcome, "Prosocial", "Prosocial behaviour")) %>% 
+  mutate(outcome = str_replace(outcome, "Hyperactivity", "Hyperactivity-inattentiveness")) %>% 
+  mutate(outcome = str_replace(outcome, "Emotional", "Emotional problems ")) %>% 
+  mutate(outcome = str_replace(outcome, "Peer", "Peer problems")) %>% 
+  mutate(outcome = str_replace(outcome, "Conduct", "Conduct problems"))
 
 names(results_table)[names(results_table)=="Estimate (SE).1"] <- "Estimate (SE)"
 names(results_table)[names(results_table)=="Estimate (SE).2"] <- "Estimate (SE)"
 names(results_table)[names(results_table)=="p.1"] <- "p"
 names(results_table)[names(results_table)=="p.2"] <- "p"
-names(results_table)[names(results_table)=="outcome"] <- "Socio-Emotional Outcome"
+names(results_table)[names(results_table)=="outcome"] <- "Socio-emotional outcome"
 
 
 ```
@@ -78,7 +84,7 @@ results_table %>%
   kable_classic(html_font = "Arial") %>% 
   pack_rows("Males", 1,6) %>% 
   pack_rows("Females", 7, 12) %>% 
-  add_header_above(c("", "Natural Direct Effect" = 2, "Natural Indirect Effect" = 2, "Total Effect" = 2)) %>% 
+  add_header_above(c("", "Natural direct effect" = 2, "Natural indirect effect" = 2, "Total effect" = 2)) %>% 
   footnote(general = "Socio-Emotional Outcomes are based on scores from the Strengths and Difficulties Questionnaire. SE = Standard Error")
 ```
 
