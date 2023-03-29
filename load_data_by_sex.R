@@ -1,4 +1,8 @@
 library(haven)
+install.packages("cloudstoR")
+library("cloudstoR")
+cloud_auth()
+cloud_browse(path = "")
 
 male_data <- function(){
   load(file = "Z:/LSAC dataset/Study_2/Study_2/df_males_domsp_weekday.RData", envir = globalenv())
