@@ -8,13 +8,13 @@ library(rmarkdown)
 
 source("./load_data_by_sex.R")
 source("./munging.R")
-male_data()
-munge("male")
-female_data()
-munge("female")
+#male_data()
+#munge("male")
+#female_data()
+#munge("female")
 
 #Run loop for all socio-emotional variables
-for (x in 16:ncol(df_male)) {
+for (x in 21:ncol(df_male)) {
   name <- colnames(df_male[,x])
   assign("objectname", (paste(name,"~","SEP + model3_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + mother_home + father_home + mental_health + mother_race + father_race")))
   expData <- assign(paste0("expData_", name), neImpute(objectname, data = df_male))
@@ -24,7 +24,7 @@ for (x in 16:ncol(df_male)) {
 }
 #Summary of results in "results__male_mediation.Rmd" 
 
-for (x in 16:ncol(df_female)) {
+for (x in 20:ncol(df_female)) {
   name <- colnames(df_female[,x])
   assign("objectname", (paste(name,"~","SEP + model4_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + mother_home + father_home + mental_health + mother_race + father_race")))
   expData <- assign(paste0("expData_", name), neImpute(objectname, data = df_female))
