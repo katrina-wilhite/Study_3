@@ -36,7 +36,7 @@ munge <- function(sex) {
     mutate(father_race=recode(father_race, '1101' = '1', '-9' = '2')) 
   df_sex$father_race[is.na(df_sex$father_race)] <- 0
   df_sex$father_race <- as.factor(df_sex$father_race) 
-  factor_columns <- c(model_used, "Remoteness", "Indigenous", "adv", "dis", "resources", "education_occupation", "mother_home", "father_home", "mental_health")
+  factor_columns <- c(model_used, "Remoteness", "Indigenous", "adv", "dis", "resources", "mother_home", "father_home", "mental_health")
   for (x in factor_columns) {
     name <- colnames(df_sex[,x])
     df_sex[[name]] <- as.factor(df_sex[[name]])
