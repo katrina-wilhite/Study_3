@@ -1,0 +1,615 @@
+
+```{r include=FALSE}
+library(regmed)
+library(dplyr)
+library(haven)
+library(igraph)
+library(kableExtra)
+library(stringr)
+#source("./lasso_mediation.R")
+```
+
+```{r include=FALSE}
+load("./Mediation_Data.rdata")
+```
+
+
+```{r include=FALSE}
+#Fit results for female prosocial behavior 
+plot.regmed.grid(fit_female_hapsoc)
+female_hapsoc_fit_best <- regmed.grid.bestfit(fit_female_hapsoc)
+summary(female_hapsoc_fit_best)
+#One non-zero coefficient 
+edges_med_f_hapsoc <- regmed.edges(female_hapsoc_fit_best, type = "mediators")
+#plot.regmed.edges(edges_med_f_hapsoc)
+#Effect not large enough to mediate
+
+```
+
+
+
+```{r include=FALSE}
+#Fit results for female hyperactivity 
+plot.regmed.grid(fit_female_hahypr)
+female_hahypr_fit_best <- regmed.grid.bestfit(fit_female_hahypr)
+summary(female_hahypr_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female emotional problems  
+plot.regmed.grid(fit_female_haemot)
+female_haemot_fit_best <- regmed.grid.bestfit(fit_female_haemot)
+summary(female_haemot_fit_best)
+#One non-zero coefficient 
+edges_med_f_haemot <- regmed.edges(female_haemot_fit_best, type = "mediators")
+#plot.regmed.edges(edges_med_f_haemot)
+#Effect not large enough to mediate
+```
+
+```{r include=FALSE}
+#Fit results for female peer problems  
+plot.regmed.grid(fit_female_hapeer)
+female_hapeer_fit_best <- regmed.grid.bestfit(fit_female_hapeer)
+summary(female_hapeer_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female conduct problems 
+plot.regmed.grid(fit_female_hacondb)
+female_hacondb_fit_best <- regmed.grid.bestfit(fit_female_hacondb)
+summary(female_hacondb_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female total SDQ score  
+plot.regmed.grid(fit_female_hasdqtb)
+female_hasdqtb_fit_best <- regmed.grid.bestfit(fit_female_hasdqtb)
+summary(female_hasdqtb_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male prosocial behavior 
+plot.regmed.grid(fit_male_hapsoc)
+male_hapsoc_fit_best <- regmed.grid.bestfit(fit_male_hapsoc)
+summary(male_hapsoc_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male hyperactivity 
+plot.regmed.grid(fit_male_hahypr)
+male_hahypr_fit_best <- regmed.grid.bestfit(fit_male_hahypr)
+summary(male_hahypr_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male emotional problems  
+plot.regmed.grid(fit_male_haemot)
+male_haemot_fit_best <- regmed.grid.bestfit(fit_male_haemot)
+summary(male_haemot_fit_best)
+#One non-zero coefficient 
+edges_med_m_haemot <- regmed.edges(male_haemot_fit_best, type = "mediators")
+#plot.regmed.edges(edges_med_m_haemot)
+#Effect not large enough to mediate
+```
+
+```{r include=FALSE}
+#Fit results for male peer problems  
+plot.regmed.grid(fit_male_hapeer)
+male_hapeer_fit_best <- regmed.grid.bestfit(fit_male_hapeer)
+summary(male_hapeer_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male conduct problems 
+plot.regmed.grid(fit_male_hacondb)
+male_hacondb_fit_best <- regmed.grid.bestfit(fit_male_hacondb)
+summary(male_hacondb_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male total SDQ score  
+plot.regmed.grid(fit_male_hasdqtb)
+male_hasdqtb_fit_best <- regmed.grid.bestfit(fit_male_hasdqtb)
+summary(male_hasdqtb_fit_best)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female prosocial behavior 
+plot.regmed.grid(fit_female_hapsoc_single)
+female_hapsoc_fit_best_single <- regmed.grid.bestfit(fit_female_hapsoc_single)
+summary(female_hapsoc_fit_best_single)
+#One non-zero coefficient 
+edges_med_f_hapsoc_single <- regmed.edges(female_hapsoc_fit_best_single, type = "mediators")
+
+```
+
+```{r include=FALSE}
+#Fit results for female hyperactivity 
+plot.regmed.grid(fit_female_hahypr_single)
+female_hahypr_fit_best_single <- regmed.grid.bestfit(fit_female_hahypr_single)
+summary(female_hahypr_fit_best_single)
+#One non-zero coefficient 
+edges_med_f_hahypr_single <- regmed.edges(female_hahypr_fit_best_single, type = "mediators")
+#plot.regmed.edges(edges_med_f_hahypr_single)
+#Effect not large enough to be significant 
+```
+
+```{r include=FALSE}
+#Fit results for female emotional problems  
+plot.regmed.grid(fit_female_haemot_single)
+female_haemot_fit_best_single <- regmed.grid.bestfit(fit_female_haemot_single)
+summary(female_haemot_fit_best_single)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female peer problems  
+plot.regmed.grid(fit_female_hapeer_single)
+female_hapeer_fit_best_single <- regmed.grid.bestfit(fit_female_hapeer_single)
+summary(female_hapeer_fit_best_single)
+#One non-zero coefficient 
+edges_med_f_hapeer_single <- regmed.edges(female_hapeer_fit_best_single, type = "mediators")
+#plot.regmed.edges(edges_med_f_hapeer_single)
+#Effect not large enough to be significant 
+```
+
+```{r include=FALSE}
+#Fit results for female conduct problems 
+plot.regmed.grid(fit_female_hacondb_single)
+female_hacondb_fit_best_single <- regmed.grid.bestfit(fit_female_hacondb_single)
+summary(female_hacondb_fit_best_single)
+#One non-zero coefficient 
+edges_med_f_hacondb_single <- regmed.edges(female_hacondb_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_f_hacondb_single)
+#
+```
+
+```{r include=FALSE}
+#Fit results for female total SDQ score  
+plot.regmed.grid(fit_female_hasdqtb_single)
+female_hasdqtb_fit_best_single <- regmed.grid.bestfit(fit_female_hasdqtb_single)
+summary(female_hasdqtb_fit_best_single)
+#One non-zero coefficient 
+edges_med_f_hasdqtb_single <- regmed.edges(female_hasdqtb_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_f_hasdqtb_single)
+```
+
+```{r include=FALSE}
+#Fit results for male prosocial behavior 
+plot.regmed.grid(fit_male_hapsoc_single)
+male_hapsoc_fit_best_single <- regmed.grid.bestfit(fit_male_hapsoc_single)
+summary(male_hapsoc_fit_best_single)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male hyperactivity 
+plot.regmed.grid(fit_male_hahypr_single)
+male_hahypr_fit_best_single <- regmed.grid.bestfit(fit_male_hahypr_single)
+summary(male_hahypr_fit_best_single)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male emotional problems  
+plot.regmed.grid(fit_male_haemot_single)
+male_haemot_fit_best_single <- regmed.grid.bestfit(fit_male_haemot_single)
+summary(male_haemot_fit_best_single)
+#One non-zero coefficient 
+edges_med_m_haemot_single <- regmed.edges(male_haemot_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_m_haemot_single)
+```
+
+```{r include=FALSE}
+#Fit results for male peer problems  
+plot.regmed.grid(fit_male_hapeer_single)
+male_hapeer_fit_best_single <- regmed.grid.bestfit(fit_male_hapeer_single)
+summary(male_hapeer_fit_best_single)
+#One non-zero coefficient 
+edges_med_m_hapeer_single <- regmed.edges(male_hapeer_fit_best_single, type = "mediators")
+#plot.regmed.edges(edges_med_m_hapeer_single)
+#Effect not large enough to be significant 
+```
+
+```{r include=FALSE}
+#Fit results for male conduct problems 
+plot.regmed.grid(fit_male_hacondb_single)
+male_hacondb_fit_best_single <- regmed.grid.bestfit(fit_male_hacondb_single)
+summary(male_hacondb_fit_best_single)
+#Two non-zero coefficient (education-based SB and screen time)
+edges_med_m_hacondb_single <- regmed.edges(male_hacondb_fit_best_single, type = "mediators")
+#plot.regmed.edges(edges_med_m_hacondb_single)
+#Effects not large enough to be significant 
+```
+
+```{r include=FALSE}
+#Fit results for male total SDQ score  
+plot.regmed.grid(fit_male_hasdqtb_single)
+male_hasdqtb_fit_best_single <- regmed.grid.bestfit(fit_male_hasdqtb_single)
+summary(male_hasdqtb_fit_best_single)
+#One non-zero coefficient 
+edges_med_m_hasdqtb_single <- regmed.edges(male_hasdqtb_fit_best_single, type = "mediators")
+plot.regmed.edges(edges_med_m_hasdqtb_single)
+```
+
+```{r include=FALSE}
+#Fit results for female prosocial behavior 
+plot.regmed.grid(fit_female_hapsoc_two)
+female_hapsoc_fit_best_two <- regmed.grid.bestfit(fit_female_hapsoc_two)
+summary(female_hapsoc_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female hyperactivity 
+plot.regmed.grid(fit_female_hahypr_two)
+female_hahypr_fit_best_two <- regmed.grid.bestfit(fit_female_hahypr_two)
+summary(female_hahypr_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female emotional problems  
+plot.regmed.grid(fit_female_haemot_two)
+female_haemot_fit_best_two <- regmed.grid.bestfit(fit_female_haemot_two)
+summary(female_haemot_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female peer problems  
+plot.regmed.grid(fit_female_hapeer_two)
+female_hapeer_fit_best_two <- regmed.grid.bestfit(fit_female_hapeer_two)
+summary(female_hapeer_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female conduct problems 
+plot.regmed.grid(fit_female_hacondb_two)
+female_hacondb_fit_best_two <- regmed.grid.bestfit(fit_female_hacondb_two)
+summary(female_hacondb_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female total SDQ score  
+plot.regmed.grid(fit_female_hasdqtb_two)
+female_hasdqtb_fit_best_two <- regmed.grid.bestfit(fit_female_hasdqtb_two)
+summary(female_hasdqtb_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male prosocial behavior 
+plot.regmed.grid(fit_male_hapsoc_two)
+male_hapsoc_fit_best_two <- regmed.grid.bestfit(fit_male_hapsoc_two)
+summary(male_hapsoc_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male hyperactivity 
+plot.regmed.grid(fit_male_hahypr_two)
+male_hahypr_fit_best_two <- regmed.grid.bestfit(fit_male_hahypr_two)
+summary(male_hahypr_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male emotional problems  
+plot.regmed.grid(fit_male_haemot_two)
+male_haemot_fit_best_two <- regmed.grid.bestfit(fit_male_haemot_two)
+summary(male_haemot_fit_best_two)
+#2V3V6V7V12 - very tiny mediation interaction of naps, education, screen time, self-care, and household LPA
+#All other coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male peer problems  
+plot.regmed.grid(fit_male_hapeer_two)
+male_hapeer_fit_best_two <- regmed.grid.bestfit(fit_male_hapeer_two)
+summary(male_hapeer_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male conduct problems 
+plot.regmed.grid(fit_male_hacondb_two)
+male_hacondb_fit_best_two <- regmed.grid.bestfit(fit_male_hacondb_two)
+summary(male_hacondb_fit_best_two)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male total SDQ score  
+plot.regmed.grid(fit_male_hasdqtb_two)
+male_hasdqtb_fit_best_two <- regmed.grid.bestfit(fit_male_hasdqtb_two)
+summary(male_hasdqtb_fit_best_two)
+#All coefficients are 0 
+```
+
+
+
+
+
+```{r include=FALSE}
+#Fit results for male prosocial behavior 
+plot.regmed.grid(fit_male_hapsoc_general)
+male_hapsoc_fit_best_general <- regmed.grid.bestfit(fit_male_hapsoc_general)
+summary(male_hapsoc_fit_best_general)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male hyperactivity 
+plot.regmed.grid(fit_male_hahypr_general)
+male_hahypr_fit_best_general <- regmed.grid.bestfit(fit_male_hahypr_general)
+summary(male_hahypr_fit_best_general)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male emotional problems  
+plot.regmed.grid(fit_male_haemot_general)
+male_haemot_fit_best_general <- regmed.grid.bestfit(fit_male_haemot_general)
+summary(male_haemot_fit_best_general)
+
+#All other coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male peer problems  
+plot.regmed.grid(fit_male_hapeer_general)
+male_hapeer_fit_best_general <- regmed.grid.bestfit(fit_male_hapeer_general)
+summary(male_hapeer_fit_best_general)
+edges_male_hapeer_fit_best_general <- regmed.edges(male_hapeer_fit_best_general, type = "mediators")
+plot.regmed.edges(edges_male_hapeer_fit_best_general)
+```
+
+```{r include=FALSE}
+#Fit results for male conduct problems 
+plot.regmed.grid(fit_male_hacondb_general)
+male_hacondb_fit_best_general <- regmed.grid.bestfit(fit_male_hacondb_general)
+summary(male_hacondb_fit_best_general)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male total SDQ score  
+plot.regmed.grid(fit_male_hasdqtb_general)
+male_hasdqtb_fit_best_general <- regmed.grid.bestfit(fit_male_hasdqtb_general)
+summary(male_hasdqtb_fit_best_general)
+edges_male_hasdqtb_fit_best_general <- regmed.edges(male_hasdqtb_fit_best_general, type = "mediators")
+#plot.regmed.edges(edges_male_hasdqtb_fit_best_general)
+#Effects not large enough to be significant 
+```
+
+
+
+```{r include=FALSE}
+#Fit results for female prosocial behavior 
+plot.regmed.grid(fit_female_hapsoc_general)
+female_hapsoc_fit_best_general <- regmed.grid.bestfit(fit_female_hapsoc_general)
+summary(female_hapsoc_fit_best_general)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female hyperactivity 
+plot.regmed.grid(fit_female_hahypr_general)
+female_hahypr_fit_best_general <- regmed.grid.bestfit(fit_female_hahypr_general)
+summary(female_hahypr_fit_best_general)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female emotional problems  
+plot.regmed.grid(fit_female_haemot_general)
+female_haemot_fit_best_general <- regmed.grid.bestfit(fit_female_haemot_general)
+summary(female_haemot_fit_best_general)
+#All other coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female peer problems  
+plot.regmed.grid(fit_female_hapeer_general)
+female_hapeer_fit_best_general <- regmed.grid.bestfit(fit_female_hapeer_general)
+summary(female_hapeer_fit_best_general)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female conduct problems 
+plot.regmed.grid(fit_female_hacondb_general)
+female_hacondb_fit_best_general <- regmed.grid.bestfit(fit_female_hacondb_general)
+summary(female_hacondb_fit_best_general)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female total SDQ score  
+plot.regmed.grid(fit_female_hasdqtb_general)
+female_hasdqtb_fit_best_general <- regmed.grid.bestfit(fit_female_hasdqtb_general)
+summary(female_hasdqtb_fit_best_general)
+#All coefficients are 0 
+```
+
+
+
+
+```{r include=FALSE}
+#Fit results for male prosocial behavior 
+plot.regmed.grid(fit_male_hapsoc_general_interactions)
+male_hapsoc_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hapsoc_general_interactions)
+summary(male_hapsoc_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male hyperactivity 
+plot.regmed.grid(fit_male_hahypr_general_interactions)
+male_hahypr_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hahypr_general_interactions)
+summary(male_hahypr_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male emotional problems  
+plot.regmed.grid(fit_male_haemot_general_interactions)
+male_haemot_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_haemot_general_interactions)
+summary(male_haemot_fit_best_general_interactions)
+
+#All other coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male peer problems  
+plot.regmed.grid(fit_male_hapeer_general_interactions)
+male_hapeer_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hapeer_general_interactions)
+summary(male_hapeer_fit_best_general_interactions)
+#All coefficients are 0
+```
+
+```{r include=FALSE}
+#Fit results for male conduct problems 
+plot.regmed.grid(fit_male_hacondb_general_interactions)
+male_hacondb_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hacondb_general_interactions)
+summary(male_hacondb_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for male total SDQ score  
+plot.regmed.grid(fit_male_hasdqtb_general_interactions)
+male_hasdqtb_fit_best_general_interactions <- regmed.grid.bestfit(fit_male_hasdqtb_general_interactions)
+summary(male_hasdqtb_fit_best_general_interactions)
+#All coefficients are 0
+```
+
+
+
+```{r include=FALSE}
+#Fit results for female prosocial behavior 
+plot.regmed.grid(fit_female_hapsoc_general_interactions)
+female_hapsoc_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hapsoc_general_interactions)
+summary(female_hapsoc_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female hyperactivity 
+plot.regmed.grid(fit_female_hahypr_general_interactions)
+female_hahypr_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hahypr_general_interactions)
+summary(female_hahypr_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female emotional problems  
+plot.regmed.grid(fit_female_haemot_general_interactions)
+female_haemot_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_haemot_general_interactions)
+summary(female_haemot_fit_best_general_interactions)
+#All other coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female peer problems  
+plot.regmed.grid(fit_female_hapeer_general_interactions)
+female_hapeer_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hapeer_general_interactions)
+summary(female_hapeer_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female conduct problems 
+plot.regmed.grid(fit_female_hacondb_general_interactions)
+female_hacondb_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hacondb_general_interactions)
+summary(female_hacondb_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+```{r include=FALSE}
+#Fit results for female total SDQ score  
+plot.regmed.grid(fit_female_hasdqtb_general_interactions)
+female_hasdqtb_fit_best_general_interactions <- regmed.grid.bestfit(fit_female_hasdqtb_general_interactions)
+summary(female_hasdqtb_fit_best_general_interactions)
+#All coefficients are 0 
+```
+
+
+
+```{r include=FALSE}
+model_selection_table <- data.frame(matrix(ncol = 3, nrow= 0))
+colnames(model_selection_table) <- c("bic", "lambda")
+
+
+
+model_selection <- function(x) { 
+  model <- x$grid.data %>%
+    select(lambda, bic) %>% 
+    slice_min(n = 1, bic) %>% 
+    select(order(colnames(.)))
+  .GlobalEnv$model_selection_table <- rbind(model_selection_table, model)
+}
+
+model_selection_list <- list(male_hapsoc_general = fit_male_hapsoc_general, male_hahypr_general = fit_male_hahypr_general, male_haemot_general = fit_male_haemot_general, male_hapeer_general = fit_male_hapeer_general, male_hacondb_general = fit_male_hacondb_general, male_hasdqtb_general = fit_male_hasdqtb_general, male_hapsoc_general_interactions =fit_male_hapsoc_general_interactions, male_hahypr_general_interactions = fit_male_hahypr_general_interactions, male_haemot_general_interactions = fit_male_haemot_general_interactions, male_hapeer_general_interactions = fit_male_hapeer_general_interactions, male_hacondb_general_interactions = fit_male_hacondb_general_interactions, male_hasdqtb_general_interactions = fit_male_hasdqtb_general_interactions, female_hapsoc_general = fit_female_hapsoc_general, female_hahypr_general = fit_female_hahypr_general, female_haemot_general = fit_female_haemot_general, female_hapeer_general = fit_female_hapeer_general, female_hacondb_general = fit_female_hacondb_general, female_hasdqtb_general = fit_female_hasdqtb_general, female_hapsoc_general_interactions =fit_female_hapsoc_general_interactions, female_hahypr_general_interactions = fit_female_hahypr_general_interactions, female_haemot_general_interactions = fit_female_haemot_general_interactions, female_hapeer_general_interactions = fit_female_hapeer_general_interactions, female_hacondb_general_interactions = fit_female_hacondb_general_interactions, female_hasdqtb_general_interactions = fit_female_hasdqtb_general_interactions, male_hapsoc_single = fit_male_hapsoc_single, male_hahypr_single = fit_male_hahypr_single, male_haemot_single = fit_male_haemot_single, male_hapeer_single = fit_male_hapeer_single, male_hacondb_single = fit_male_hacondb_single, male_hasdqtb_single = fit_male_hasdqtb_single, male_hapsoc =fit_male_hapsoc, male_hahypr = fit_male_hahypr, male_haemot = fit_male_haemot, male_hapeer = fit_male_hapeer, male_hacondb = fit_male_hacondb, male_hasdqtb = fit_male_hasdqtb, female_hapsoc_single = fit_female_hapsoc_single, female_hahypr_single = fit_female_hahypr_single, female_haemot_single = fit_female_haemot_single, female_hapeer_single = fit_female_hapeer_single, female_hacondb_single = fit_female_hacondb_single, female_hasdqtb_single = fit_female_hasdqtb_single, female_hapsoc =fit_female_hapsoc, female_hahypr = fit_female_hahypr, female_haemot = fit_female_haemot, female_hapeer = fit_female_hapeer, female_hacondb = fit_female_hacondb, female_hasdqtb = fit_female_hasdqtb)
+
+
+model_selection_list_names <- names(model_selection_list)
+
+#Run loop for males and then females - group by males and females in kable table 
+for (i in model_selection_list) {
+  model_selection(i)
+}
+
+model_selection_table
+model_selection_table <- model_selection_table[-c(7:8),]
+model_selection_table$outcome_label <- model_selection_list_names
+model_selection_table <- model_selection_table %>% 
+  select(outcome_label, everything())
+```
+
+```{r include=FALSE}
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "female_")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "male_")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "_single")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "_interactions")
+model_selection_table$outcome_label <- stringr::str_remove(model_selection_table$outcome_label, "_general")
+
+model_selection_table <- model_selection_table %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hapsoc", "Prosocial Behaviour")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hahypr", "Hyperactivity-Inattentiveness")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "haemot", "Emotional Problems ")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hapeer", "Peer Problems")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hacondb", "Conduct Problems")) %>% 
+  mutate(outcome_label = str_replace(outcome_label, "hasdqtb", "Total Score"))
+  
+model_selection_table <- dplyr::rename(model_selection_table, 'Socio-Emotional Outcomes'=outcome_label) 
+rownames(model_selection_table) <- NULL
+  
+```
+
+```{r echo=FALSE}
+model_selection_table %>% 
+  kbl(caption = "Appendix D.1 Lasso Model Selection") %>% 
+  kable_classic(html_font = "Arial") %>% 
+  pack_rows("Males (Single General Movement Behaviours)", 1,6) %>% 
+  pack_rows("Males (Combinations of General Movement Behaviours)", 7, 12) %>% 
+  pack_rows("Females (Single General Movement Behaviours)", 13, 18) %>% 
+  pack_rows("Females (Combinations of General Movement Behaviours)", 19, 24) %>% 
+  pack_rows("Males (Single Domain-Specific Movement Behaviours)", 25,30) %>% 
+  pack_rows("Males (Combinations of Domain-Specific Movement Behaviours)", 31, 36) %>% 
+  pack_rows("Females (Single Domain-Specific Movement Behaviours)", 37, 42) %>% 
+  pack_rows("Females (Combinations of Domain-Specific Movement Behaviours)", 43, 48) %>% 
+  footnote(general = "Socio-Emotional Outcomes are based on scores from the Strengths and Difficulties Questionnaire.")
+```

@@ -1,0 +1,96 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r include=FALSE}
+library(dplyr)
+library(haven)
+library(rmarkdown)
+library(knitr)
+library(kableExtra)
+library(stringr)
+#source("./load_data_by_sex.R")
+#source("./munging.R")
+#source("./simple_mediation.R")
+```
+
+```{r include=FALSE}
+#Check results for mediation 
+#No mediation with prosocial behaviours
+results_table <- data.frame(matrix(ncol = 7, nrow=0))
+colnames(results_table) <- c("Socio-emotional outcome", "Estimate (SE)", "p", "Estimate (SE)", "p", "Estimate (SE)", "p")
+
+effect_results <- function (x) {
+results <- broom::tidy(x)
+results <- results[,c("estimate", "std.error", "adj.p.value")]
+results$estimate <- paste0(round(results$estimate, digits = 2), " (", round(results$std.error, digits = 2), ")")
+results <- results %>% 
+  rename_at('estimate', ~ 'Estimate (Standard Error)')
+results[,"std.error"] <- list(NULL)
+results$adj.p.value <- round(results$adj.p.value, digits = 2)
+results <- results %>% 
+  rename_at('adj.p.value', ~ 'p')
+vec <- as.vector(t(results))
+array <- array(vec, dim=c(1,6))
+d <- as.data.frame(array)
+colnames(d) <- c("Estimate (SE)", "p","Estimate (SE)", "p","Estimate (SE)", "p")
+d$outcome <- as.character(x[["model"]][["terms"]][[2]]) 
+d <- d[ , c(7, 1:6)] 
+.GlobalEnv$results_table <- rbind(results_table, d)
+}
+
+effdecomp_list <- list(male_effdecomp_prosocial, male_effdecomp_hyperactivity, male_effdecomp_emotional, male_effdecomp_peer, male_effdecomp_conduct, male_effdecomp_total, female_effdecomp_prosocial, female_effdecomp_hyperactivity, female_effdecomp_emotional, female_effdecomp_peer, female_effdecomp_conduct, female_effdecomp_total)
+
+#Run loop for males and then females - group by males and females in kable table 
+for (i in effdecomp_list) {
+effect_results(i)
+  }
+
+```
+
+```{r include=FALSE}
+
+results_table$p[results_table$p == "0.00"] <- "<.01"
+results_table$p[results_table$p == "0.0"] <- "<.01"
+results_table$`Estimate (SE)`[results_table$`Estimate (SE)` == "0 (0.04)"] <- "0.00 (0.04)"
+results_table$`Estimate (SE)`[results_table$`Estimate (SE)` == "-0.1 (0.03)"] <- "-0.10 (0.03)"
+results_table$p.1[results_table$p.1 == "0.4"] <- "0.40"
+results_table$p.2[results_table$p.2 == "0.00"] <- "<.01"
+results_table$p.2[results_table$p.2 == "0.0"] <- "<.01"
+results_table$`Estimate (SE).1`[results_table$`Estimate (SE).1`== "0 (0)"] <- "0.00 (0.00)"
+results_table$`Estimate (SE).1`[results_table$`Estimate (SE).1`== "0.01 (0)"] <- "0.01 (0.00)"
+results_table$`Estimate (SE).1`[results_table$`Estimate (SE).1`== "-0.01 (0)"] <- "-0.01 (0.00)"
+results_table$`Estimate (SE).2`[results_table$`Estimate (SE).2` == "0 (0.04)"] <- "0.00 (0.04)"
+results_table$`Estimate (SE).2`[results_table$`Estimate (SE).2`== "-0.1 (0.03)"] <- "-0.10 (0.03)"
+results_table$outcome <- tools::toTitleCase(results_table$outcome)
+results_table <- results_table %>% 
+  mutate(outcome = str_replace(outcome, "Prosocial", "Prosocial behaviour")) %>% 
+  mutate(outcome = str_replace(outcome, "Hyperactivity", "Hyperactivity-inattentiveness")) %>% 
+  mutate(outcome = str_replace(outcome, "Emotional", "Emotional problems ")) %>% 
+  mutate(outcome = str_replace(outcome, "Peer", "Peer problems")) %>% 
+  mutate(outcome = str_replace(outcome, "Conduct", "Conduct problems"))
+
+names(results_table)[names(results_table)=="Estimate (SE).1"] <- "Estimate (SE)"
+names(results_table)[names(results_table)=="Estimate (SE).2"] <- "Estimate (SE)"
+names(results_table)[names(results_table)=="p.1"] <- "p"
+names(results_table)[names(results_table)=="p.2"] <- "p"
+names(results_table)[names(results_table)=="outcome"] <- "Socio-emotional outcome"
+
+
+```
+
+
+```{r echo=FALSE}
+#results_table$p = cell_spec(results_table$p, bold = ifelse(results_table$p == "0.04", TRUE, FALSE))
+results_table %>% 
+  kbl(caption = "Table 4.3 Mediation Effects of Movement Trajectory Profiles and Socio-Emotional Outcomes") %>% 
+  column_spec(3, bold = ifelse(results_table$p[1:11] == "0.04" | results_table$p[1:11] == "0.01" | results_table$p[1:11] == "<.01" | results_table$p[1:11] == "0.03", TRUE, FALSE)) %>% 
+  kable_classic(html_font = "Arial") %>% 
+  pack_rows("Males", 1,6) %>% 
+  pack_rows("Females", 7, 12) %>% 
+  add_header_above(c("", "Natural direct effect" = 2, "Natural indirect effect" = 2, "Total effect" = 2)) %>% 
+  footnote(general = "Socio-Emotional Outcomes are based on scores from the Strengths and Difficulties Questionnaire. SE = Standard Error. Significant results are in bold.")
+```
+
+
