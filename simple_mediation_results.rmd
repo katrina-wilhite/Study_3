@@ -85,7 +85,8 @@ names(results_table)[names(results_table)=="outcome"] <- "Socio-emotional outcom
 #results_table$p = cell_spec(results_table$p, bold = ifelse(results_table$p == "0.04", TRUE, FALSE))
 results_table %>% 
   kbl(caption = "Table 4.3 Mediation Effects of Movement Trajectory Profiles and Socio-Emotional Outcomes") %>% 
-  column_spec(3, bold = ifelse(results_table$p[1:11] == "0.04" | results_table$p[1:11] == "0.01" | results_table$p[1:11] == "<.01" | results_table$p[1:11] == "0.03", TRUE, FALSE)) %>% 
+  column_spec(3, bold = ifelse(results_table$p == "0.04" | results_table$p == "<.01" | results_table$p == "0.02", TRUE, FALSE)) %>% 
+  column_spec(7, bold = ifelse(results_table$p == "0.04" |results_table$p == "0.03" | results_table$p == "0.02" | results_table$p == "<.01", TRUE, FALSE)) %>% 
   kable_classic(html_font = "Arial") %>% 
   pack_rows("Males", 1,6) %>% 
   pack_rows("Females", 7, 12) %>% 
