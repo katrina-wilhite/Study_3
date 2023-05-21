@@ -26,12 +26,17 @@ for (x in 21:ncol(df_male)) {
 
 for (x in 20:ncol(df_female)) {
   name <- colnames(df_female[,x])
-  assign("objectname", (paste(name,"~","SEP + model4_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + mother_home + father_home + mental_health + mother_race + father_race")))
+  assign("objectname", (paste(name,"~","SEP + model4_trajectory_assignments + Remoteness + Indigenous + adv + dis + resources + mother_home + father_home + mental_health + father_race")))
   expData <- assign(paste0("expData_", name), neImpute(objectname, data = df_female))
-  assign("model", (paste(name,"~",("SEP0 + SEP1 + Remoteness + Indigenous + adv + dis + resources + mother_home + father_home + mental_health + mother_race + father_race"))))
+  assign("model", (paste(name,"~",("SEP0 + SEP1 + Remoteness + Indigenous + adv + dis + resources + mother_home + father_home + mental_health + father_race"))))
   outcome_results <- assign(paste0("ne_", name), neModel(model, expData = expData, se = "robust"))
   assign(paste0("female_effdecomp_", name), envir = globalenv(), neEffdecomp(outcome_results))
 }
+
+
+
+# 
+
 
 #See RMD file "simple_mediation_results.rmd" for summaries of all effdecomp objects 
 
