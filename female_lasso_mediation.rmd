@@ -1,9 +1,20 @@
+```{r}
+###This is the old code - See "lasso_mediation.R" 
+```
+
+
 ```{r include=FALSE}
-#install.packages("regmed")
 library(regmed)
 library(dplyr)
 library(haven)
 ```
+
+```{r}
+plot.regmed.grid(fit_female_hapsoc)
+female_hapsoc_fit_best <- regmed.grid.bestfit(fit.female.hapsoc)
+summary(female_hapso_fit_best)
+```
+
 
 ```{r}
 #Load relevant data 
@@ -59,9 +70,7 @@ mediators_interactions <- cbind(interactions_2, interactions_3, interactions_4, 
 
 ```{r}
 #Select exposure variables (SEP) - already standarized in LSAC
-exposure_variable <- df_females %>% 
-  select(SEP) 
-exposure_variable <- exposure_variable$SEP 
+exposure_variable <- pull(df_females, SEP)
 ```
 
 ```{r}
@@ -78,7 +87,7 @@ for (x in 123:ncol(df_females)) {
 df_outcomes <- cbind(hapsoc, hahypr, haemot, hapeer,  hacondb, hasdqtb) 
 df_outcomes <- as.data.frame(df_outcomes)
 #Make lambda grid to be used in function to find best fit model 
-lambda.grid <- seq(from = 0.4, to = 0.01, by = -0.01)
+lambda_grid <- seq(from = 0.4, to = 0.01, by = -0.01)
 #Run loop to prefilter mediators and fit to model 
 for(i in 1:ncol(df_outcomes)) {
   outcome <- colnames(df_outcomes)[i]  
@@ -87,132 +96,136 @@ for(i in 1:ncol(df_outcomes)) {
   x <- outcome_list$exposure
   y <- outcome_list$outcome
   med <- outcome_list$mediator
-  dat.filter <- assign(paste0("dat.filter.", outcome), regmed.prefilter(x, med, y, k = 10)) 
-  x1 <- dat.filter$x
-  y1 <- dat.filter$y
-  med <- dat.filter$mediator
-  assign(paste0("fit.female.", outcome), regmed.grid(x1, med, y1, lambda.grid, frac.lasso = 0.8)) 
+  dat_filter <- assign(paste0("dat_filter_", outcome), regmed_prefilter(x, med, y, k = 10)) 
+  x1 <- dat_filter$x
+  y1 <- dat_filter$y
+  med <- dat_filter$mediator
+  assign(paste0("fit_female_", outcome), regmed_grid(x1, med, y1, lambda_grid, frac_lasso = 0.8)) 
 }
 ```
 
 ```{r}
+```
+
+
+```{r}
 #Find hapsoc mediators 
-plot.regmed.grid(fit.female.hapsoc)
-fit.best.hapsoc <- regmed.grid.bestfit(fit.female.hapsoc)
-summary(fit.best.hapsoc)
+plot_regmed_grid(fit_female_hapsoc)
+fit_best_hapsoc <- regmed_grid_bestfit(fit_female_hapsoc)
+summary(fit_best_hapsoc)
 #All coefficients are 0 - The following is code I would have used if there were coefficients 
-#edges.med.hapsoc <- regmed.edges(fit.best.hapsoc, type = "mediators")
-#plot.regmed.edges(edges.med.hapsoc)
-#edges.any.hapsoc <- regmed.edges(fit.best.hapsoc, type = "any")
-#plot.regmed.edges(edges.any.hapsoc)
+#edges_med_hapsoc <- regmed_edges(fit_best_hapsoc, type = "mediators")
+#plot_regmed_edges(edges_med_hapsoc)
+#edges_any_hapsoc <- regmed_edges(fit_best_hapsoc, type = "any")
+#plot_regmed_edges(edges_any_hapsoc)
 #Try to fit a chosen model 
-fit.single.hapsoc <- regmed.fit(x1, med, y1, lambda = .12, frac.lasso =0.8)
-summary(fit.single.hapsoc)
-edges.any.hapsoc.single <- regmed.edges(fit.single.hapsoc, type = "any")
-plot.regmed.edges(edges.any.hapsoc.single)
+fit_single_hapsoc <- regmed_fit(x1, med, y1, lambda = .12, frac_lasso =0.8)
+summary(fit_single_hapsoc)
+edges_any_hapsoc_single <- regmed_edges(fit_single_hapsoc, type = "any")
+plot_regmed_edges(edges_any_hapsoc_single)
 #There are pathways but the coefficients are very small again - no mediators can be plotted
-#edges.med.hapsoc.single <- regmed.edges(fit.single.hapsoc, type = "mediators")
-#plot.regmed.edges(edges.med.hapsoc.single)
+#edges_med_hapsoc_single <- regmed_edges(fit_single_hapsoc, type = "mediators")
+#plot_regmed_edges(edges_med_hapsoc_single)
 ```
 
 ```{r}
 #Repeat for hyperactivity 
-plot.regmed.grid(fit.female.hahypr)
-fit.best.hahypr <- regmed.grid.bestfit(fit.female.hahypr)
-summary(fit.best.hahypr)
+plot_regmed_grid(fit_female_hahypr)
+fit_best_hahypr <- regmed_grid_bestfit(fit_female_hahypr)
+summary(fit_best_hahypr)
 #All coefficients are 0 - The following is code I would have used if there were coefficients
-#edges.med.hahypr <- regmed.edges(fit.best.hahypr, type = "mediators")
-#plot.regmed.edges(edges.med.hahypr)
-#edges.any.hahypr <- regmed.edges(fit.best.hahypr, type = "any")
-#plot.regmed.edges(edges.any)
+#edges_med_hahypr <- regmed_edges(fit_best_hahypr, type = "mediators")
+#plot_regmed_edges(edges_med_hahypr)
+#edges_any_hahypr <- regmed_edges(fit_best_hahypr, type = "any")
+#plot_regmed_edges(edges_any)
 #Try to fit a chosen model 
-fit.single.hahypr <- regmed.fit(x1, med, y1, lambda = .19, frac.lasso =0.8)
-summary(fit.single.hahypr)
+fit_single_hahypr <- regmed_fit(x1, med, y1, lambda = .19, frac_lasso =0.8)
+summary(fit_single_hahypr)
 #All coefficients are 0 - The following is code I would have used if there were coefficients
-#edges.med.hahypr.single <- regmed.edges(fit.single.hahypr, type = "mediators")
-#plot.regmed.edges(edges.med.hahypr.single)
-#edges.any.hahypr.single <- regmed.edges(fit.single.hahypr, type = "any")
-#plot.regmed.edges(edges.any.hahypr.single)
+#edges_med_hahypr_single <- regmed_edges(fit_single_hahypr, type = "mediators")
+#plot_regmed_edges(edges_med_hahypr_single)
+#edges_any_hahypr_single <- regmed_edges(fit_single_hahypr, type = "any")
+#plot_regmed_edges(edges_any_hahypr_single)
 ```
 
 ```{r}
 #Repeat for emotional problems 
-plot.regmed.grid(fit.female.haemot)
-fit.best.haemot <- regmed.grid.bestfit(fit.female.haemot)
-summary(fit.best.haemot)
+plot_regmed_grid(fit_female_haemot)
+fit_best_haemot <- regmed_grid_bestfit(fit_female_haemot)
+summary(fit_best_haemot)
 #All coefficients are 0 - The following is code I would have used if there were coefficients
-#edges.med.haemot <- regmed.edges(fit.best.haemot, type = "mediators")
-#plot.regmed.edges(edges.med.haemot)
-#edges.any.haemot <- regmed.edges(fit.best.haemot, type = "any")
-#plot.regmed.edges(edges.any)
+#edges_med_haemot <- regmed_edges(fit_best_haemot, type = "mediators")
+#plot_regmed_edges(edges_med_haemot)
+#edges_any_haemot <- regmed_edges(fit_best_haemot, type = "any")
+#plot_regmed_edges(edges_any)
 #Try to fit a chosen model 
-fit.single.haemot <- regmed.fit(x1, med, y1, lambda = .14, frac.lasso =0.8)
-summary(fit.single.haemot)
-edges.any.haemot.single <- regmed.edges(fit.single.haemot, type = "any")
-plot.regmed.edges(edges.any.haemot.single)
+fit_single_haemot <- regmed_fit(x1, med, y1, lambda = .14, frac_lasso =0.8)
+summary(fit_single_haemot)
+edges_any_haemot_single <- regmed_edges(fit_single_haemot, type = "any")
+plot_regmed_edges(edges_any_haemot_single)
 #No mediation 
-#edges.med.haemot.single <- regmed.edges(fit.single.haemot, type = "mediators")
-#plot.regmed.edges(edges.med.haemot.single)
+#edges_med_haemot_single <- regmed_edges(fit_single_haemot, type = "mediators")
+#plot_regmed_edges(edges_med_haemot_single)
 ```
 
 ```{r}
 #Repeat for peer problems 
-plot.regmed.grid(fit.female.hapeer)
-fit.best.hapeer <- regmed.grid.bestfit(fit.female.hapeer)
-summary(fit.best.hapeer)
+plot_regmed_grid(fit_female_hapeer)
+fit_best_hapeer <- regmed_grid_bestfit(fit_female_hapeer)
+summary(fit_best_hapeer)
 #All coefficients are 0 - The following is code I would have used if there were coefficients
-##edges.med.hapeer <- regmed.edges(fit.best.hapeer, type = "mediators")
-#plot.regmed.edges(edges.med.hapeer)
-#edges.any.hapeer <- regmed.edges(fit.best.hapeer, type = "any")
-#plot.regmed.edges(edges.any)
+##edges_med_hapeer <- regmed_edges(fit_best_hapeer, type = "mediators")
+#plot_regmed_edges(edges_med_hapeer)
+#edges_any_hapeer <- regmed_edges(fit_best_hapeer, type = "any")
+#plot_regmed_edges(edges_any)
 #Try to fit for a chosen model 
-fit.single.hapeer <- regmed.fit(x1, med, y1, lambda = .15, frac.lasso =0.8)
-summary(fit.single.hapeer)
+fit_single_hapeer <- regmed_fit(x1, med, y1, lambda = .15, frac_lasso =0.8)
+summary(fit_single_hapeer)
 #No mediating coeffients but plot for the fun of it 
-edges.any.hapeer.single <- regmed.edges(fit.single.hapeer, type = "any")
-plot.regmed.edges(edges.any.hapeer.single)
-#edges.med.hapeer.single <- regmed.edges(fit.single.hapeer, type = "mediators")
-#plot.regmed.edges(edges.med.hapeer.single)
+edges_any_hapeer_single <- regmed_edges(fit_single_hapeer, type = "any")
+plot_regmed_edges(edges_any_hapeer_single)
+#edges_med_hapeer_single <- regmed_edges(fit_single_hapeer, type = "mediators")
+#plot_regmed_edges(edges_med_hapeer_single)
 ```
 
 ```{r}
 #Repeat for conduct problems 
-plot.regmed.grid(fit.female.hacondb)
-fit.best.hacondb <- regmed.grid.bestfit(fit.female.hacondb)
-summary(fit.best.hacondb)
+plot_regmed_grid(fit_female_hacondb)
+fit_best_hacondb <- regmed_grid_bestfit(fit_female_hacondb)
+summary(fit_best_hacondb)
 #All coefficients are 0 - The following is code I would have used if there were coefficients
-#edges.med.hacondb <- regmed.edges(fit.best.hacondb, type = "mediators")
-#plot.regmed.edges(edges.med.hacondb)
-#edges.any.hacondb <- regmed.edges(fit.best.hacondb, type = "any")
-#plot.regmed.edges(edges.any)
+#edges_med_hacondb <- regmed_edges(fit_best_hacondb, type = "mediators")
+#plot_regmed_edges(edges_med_hacondb)
+#edges_any_hacondb <- regmed_edges(fit_best_hacondb, type = "any")
+#plot_regmed_edges(edges_any)
 #Try a chosen model 
-fit.single.hacondb <- regmed.fit(x1, med, y1, lambda = .15, frac.lasso =0.8)
-summary(fit.single.hacondb)
+fit_single_hacondb <- regmed_fit(x1, med, y1, lambda = .15, frac_lasso =0.8)
+summary(fit_single_hacondb)
 #No mediating coefficients to plot "any" just to see 
-edges.any.hacondb.single <- regmed.edges(fit.single.hacondb, type = "any")
-plot.regmed.edges(edges.any.hacondb.single)
-#edges.med.hacondb.single <- regmed.edges(fit.single.hacondb, type = "mediators")
-#plot.regmed.edges(edges.med.hacondb.single)
+edges_any_hacondb_single <- regmed_edges(fit_single_hacondb, type = "any")
+plot_regmed_edges(edges_any_hacondb_single)
+#edges_med_hacondb_single <- regmed_edges(fit_single_hacondb, type = "mediators")
+#plot_regmed_edges(edges_med_hacondb_single)
 ```
 
 ```{r}
 #Repeat for total socio-emotional problems 
-plot.regmed.grid(fit.female.hasdqtb)
-fit.best.hasdqtb <- regmed.grid.bestfit(fit.female.hasdqtb)
-summary(fit.best.hasdqtb)
+plot_regmed_grid(fit_female_hasdqtb)
+fit_best_hasdqtb <- regmed_grid_bestfit(fit_female_hasdqtb)
+summary(fit_best_hasdqtb)
 #All coefficients are 0 - The following is code I would have used if there were coefficients
-#edges.med.hasdqtb <- regmed.edges(fit.best.hasdqtb, type = "mediators")
-#plot.regmed.edges(edges.med.hasdqtb)
-#edges.any.hasdqtb <- regmed.edges(fit.best.hasdqtb, type = "any")
-#plot.regmed.edges(edges.any.hasdqtb)
+#edges_med_hasdqtb <- regmed_edges(fit_best_hasdqtb, type = "mediators")
+#plot_regmed_edges(edges_med_hasdqtb)
+#edges_any_hasdqtb <- regmed_edges(fit_best_hasdqtb, type = "any")
+#plot_regmed_edges(edges_any_hasdqtb)
 #Try chosen model 
-fit.single.hasdqtb <- regmed.fit(x1, med, y1, lambda = .18, frac.lasso =0.8)
-summary(fit.single.hasdqtb)
+fit_single_hasdqtb <- regmed_fit(x1, med, y1, lambda = .18, frac_lasso =0.8)
+summary(fit_single_hasdqtb)
 #No mediating coefficients to plot "any" just to see 
-edges.any.hasdqtb.single <- regmed.edges(fit.single.hasdqtb, type = "any")
-plot.regmed.edges(edges.any.hasdqtb.single)
-#edges.med.hasdqtb.single <- regmed.edges(fit.single.hasdqtb, type = "mediators")
-#plot.regmed.edges(edges.med.hasdqtb.single)
+edges_any_hasdqtb_single <- regmed_edges(fit_single_hasdqtb, type = "any")
+plot_regmed_edges(edges_any_hasdqtb_single)
+#edges_med_hasdqtb_single <- regmed_edges(fit_single_hasdqtb, type = "mediators")
+#plot_regmed_edges(edges_med_hasdqtb_single)
 ```
 
 
